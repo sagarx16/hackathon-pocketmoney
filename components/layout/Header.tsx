@@ -1,13 +1,29 @@
 'use client';
 
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { useRouter } from 'next/navigation';
+=======
+<<<<<<< HEAD
+import { useRouter } from 'next/navigation';
+=======
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
+>>>>>>> bfc203a8c1ca248e7e1ff8e000ab88ef197b2fdf
 import { useBank } from '@/context/BankContext';
 import Link from 'next/link';
 
 export const Header: React.FC = () => {
+<<<<<<< HEAD
   const router = useRouter();
   const { userProfile, isParentView, addToast, logout } = useBank();
+=======
+<<<<<<< HEAD
+  const router = useRouter();
+  const { userProfile, isParentView, addToast, logout } = useBank();
+=======
+  const { userProfile, isParentView, addToast } = useBank();
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
+>>>>>>> bfc203a8c1ca248e7e1ff8e000ab88ef197b2fdf
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -80,6 +96,10 @@ export const Header: React.FC = () => {
           )}
         </div>
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> bfc203a8c1ca248e7e1ff8e000ab88ef197b2fdf
         {/* Logout */}
         <button
           onClick={() => {
@@ -94,6 +114,11 @@ export const Header: React.FC = () => {
           <span className="hidden lg:inline">Logout</span>
         </button>
 
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
+>>>>>>> bfc203a8c1ca248e7e1ff8e000ab88ef197b2fdf
         {/* User Profile */}
         <Link href="/profile" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
           <img

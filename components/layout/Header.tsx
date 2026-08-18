@@ -1,13 +1,20 @@
 'use client';
 
 import React, { useState } from 'react';
+<<<<<<< HEAD
 import { useRouter } from 'next/navigation';
+=======
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
 import { useBank } from '@/context/BankContext';
 import Link from 'next/link';
 
 export const Header: React.FC = () => {
+<<<<<<< HEAD
   const router = useRouter();
   const { userProfile, isParentView, addToast, logout } = useBank();
+=======
+  const { userProfile, isParentView, addToast } = useBank();
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -80,6 +87,7 @@ export const Header: React.FC = () => {
           )}
         </div>
 
+<<<<<<< HEAD
         {/* Logout */}
         <button
           onClick={() => {
@@ -94,6 +102,8 @@ export const Header: React.FC = () => {
           <span className="hidden lg:inline">Logout</span>
         </button>
 
+=======
+>>>>>>> bc810e9c2fcdbf35b64e6c6577f005f3f3942dce
         {/* User Profile */}
         <Link href="/profile" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
           <img

@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import bundleAnalyzer from "@next/bundle-analyzer";
+
+const withBundleAnalyzer = bundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const securityHeaders = [
   {
@@ -48,11 +53,11 @@ const nextConfig: NextConfig = {
         headers: securityHeaders,
       },
       {
-        source: '/(favicon.*|apple-icon.*|.*\\.webp|.*\\.avif|.*\\.png|.*\\.svg)',
+        source: '/(favicon.*|apple-icon.*|.*\\.webp|.*\\.avif|.*\\.png|.*\\.svg|.*\\.jpg|.*\\.jpeg|.*\\.woff2?)',
         headers: [
           {
             key: 'Cache-Control',
-            value: 'public, max-age=86400, stale-while-revalidate=604800',
+            value: 'public, max-age=31536000, immutable',
           },
         ],
       },
@@ -60,4 +65,5 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);
+

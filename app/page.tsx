@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { SignInButton, SignUpButton, Show, UserButton, useAuth } from '@clerk/nextjs';
+import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/ui/ScrollReveal';
 
 /* ─── Coverflow Carousel ─── */
 const coverCards = [
@@ -454,67 +455,71 @@ export default function LandingPage() {
         {/* HERO */}
         <section className="relative w-full pt-8 sm:pt-16 md:pt-20 pb-14 sm:pb-20 md:pb-28 overflow-hidden">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 flex flex-col items-center text-center relative z-10">
-            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-4 sm:mb-6 max-w-full">
-              <span className="pb-glow w-2 h-2 rounded-full bg-[#0d9488] shrink-0" />
-              <span className="text-[10px] sm:text-xs font-semibold uppercase text-[#0d9488] tracking-wider truncate">Next-Gen Student Banking • RBI Regulated Partner</span>
-            </div>
+            <ScrollReveal direction="up" distance={40} duration={0.6}>
+              <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-4 sm:mb-6 max-w-full">
+                <span className="pb-glow w-2 h-2 rounded-full bg-[#0d9488] shrink-0" />
+                <span className="text-[10px] sm:text-xs font-semibold uppercase text-[#0d9488] tracking-wider truncate">Next-Gen Student Banking • RBI Regulated Partner</span>
+              </div>
 
-            <h1 className="font-extrabold text-[#0a2540] max-w-4xl mx-auto" style={{ fontSize: 'clamp(28px,7.5vw,58px)', lineHeight: 1.15, letterSpacing: '-0.03em' }}>
-              Banking Built for Students.{' '}
-              <br className="hidden sm:inline" />
-              <span style={{ background: 'linear-gradient(to right, #0d9488, #0284c7, #0a2540)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
-                Trusted by Parents.
-              </span>
-            </h1>
+              <h1 className="font-extrabold text-[#0a2540] max-w-4xl mx-auto" style={{ fontSize: 'clamp(28px,7.5vw,58px)', lineHeight: 1.15, letterSpacing: '-0.03em' }}>
+                Banking Built for Students.{' '}
+                <br className="hidden sm:inline" />
+                <span style={{ background: 'linear-gradient(to right, #0d9488, #0284c7, #0a2540)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
+                  Trusted by Parents.
+                </span>
+              </h1>
 
-            <p className="text-sm sm:text-base md:text-lg text-[#4a5568] max-w-2xl mt-3 sm:mt-4 mb-8 sm:mb-10 leading-relaxed px-2">
-              Zero hidden fees. High-yield savings. Instant P2P transfers with parent-guided smart limits engineered for sovereign financial independence.
-            </p>
+              <p className="text-sm sm:text-base md:text-lg text-[#4a5568] max-w-2xl mt-3 sm:mt-4 mb-8 sm:mb-10 leading-relaxed px-2 mx-auto">
+                Zero hidden fees. High-yield savings. Instant P2P transfers with parent-guided smart limits engineered for sovereign financial independence.
+              </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-4 sm:px-0">
-              <Show when="signed-out">
-                <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
-                  <button
-                    type="button"
-                    className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 w-full sm:w-auto px-4 sm:px-0">
+                <Show when="signed-out">
+                  <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
+                    <button
+                      type="button"
+                      className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
+                      style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}
+                    >
+                      <span>Open an Account</span>
+                      <span className="material-symbols-outlined icon-sm">arrow_forward</span>
+                    </button>
+                  </SignUpButton>
+                </Show>
+                <Show when="signed-in">
+                  <Link
+                    href="/home"
+                    className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline"
                     style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}
                   >
-                    <span>Open an Account</span>
+                    <span>Go to Dashboard</span>
                     <span className="material-symbols-outlined icon-sm">arrow_forward</span>
-                  </button>
-                </SignUpButton>
-              </Show>
-              <Show when="signed-in">
-                <Link
-                  href="/home"
-                  className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline"
-                  style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}
-                >
-                  <span>Go to Dashboard</span>
-                  <span className="material-symbols-outlined icon-sm">arrow_forward</span>
-                </Link>
-              </Show>
-              <a href="#how-it-works" className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0a2540] bg-white border border-slate-200 hover:bg-slate-50 shadow-sm no-underline transition-all">
-                <span className="material-symbols-outlined text-[#0d9488] icon-sm">play_circle</span>
-                <span>See How It Works</span>
-              </a>
-            </div>
+                  </Link>
+                </Show>
+                <a href="#how-it-works" className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0a2540] bg-white border border-slate-200 hover:bg-slate-50 shadow-sm no-underline transition-all">
+                  <span className="material-symbols-outlined text-[#0d9488] icon-sm">play_circle</span>
+                  <span>See How It Works</span>
+                </a>
+              </div>
+            </ScrollReveal>
 
-            <CoverflowCarousel />
+            <ScrollReveal direction="up" distance={40} delay={0.2} duration={0.6} className="w-full">
+              <CoverflowCarousel />
+            </ScrollReveal>
           </div>
         </section>
 
         {/* TRUST STRIP */}
         <section className="w-full py-4 sm:py-8">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="rounded-2xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(10,37,64,0.04)] p-4 sm:p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
+            <StaggerContainer className="rounded-2xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(10,37,64,0.04)] p-4 sm:p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {[
                 { icon: 'enhanced_encryption', bg: 'bg-teal-50 border-teal-100', color: 'text-teal-700', title: '256-Bit Military Grade', sub: 'End-to-end telemetry' },
                 { icon: 'account_balance', bg: 'bg-sky-50 border-sky-100', color: 'text-sky-700', title: 'RBI-Compliant Partner', sub: 'Scheduled bank backing' },
                 { icon: 'price_check', bg: 'bg-indigo-50 border-indigo-100', color: 'text-indigo-700', title: 'Zero Hidden Charges', sub: 'No annual maintenance fees' },
                 { icon: 'family_restroom', bg: 'bg-slate-100 border-slate-200', color: 'text-[#0a2540]', title: '24/7 Guardian Oversight', sub: 'Parent telemetry link' },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
+                <StaggerItem key={i} className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 ${item.bg}`}>
                     <span className={`material-symbols-outlined icon-md ${item.color}`}>{item.icon}</span>
                   </div>
@@ -522,27 +527,27 @@ export default function LandingPage() {
                     <p className="text-xs font-bold text-[#0a2540]">{item.title}</p>
                     <p className="text-[11px] text-[#4a5568]">{item.sub}</p>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </section>
 
         {/* FEATURES */}
         <section id="features" className="w-full py-14 sm:py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="max-w-2xl mb-10 sm:mb-16">
+            <ScrollReveal direction="up" distance={30} duration={0.5} className="max-w-2xl mb-10 sm:mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm mb-3">
                 <span className="material-symbols-outlined text-[#0d9488] icon-sm">tune</span>
                 <span className="text-xs font-semibold uppercase text-[#0d9488]">Next-Gen Architecture</span>
               </div>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] tracking-tight">High-Precision Banking for High-Growth Minds.</h2>
               <p className="text-sm sm:text-base text-[#4a5568] mt-2">Engineered without legacy bank bloatware. Clean ergonomics, programmable goal vaults, and uncompromised transparency.</p>
-            </div>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
               {/* Smart Savings */}
-              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+              <StaggerItem className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-teal-700 icon-lg">savings</span>
@@ -561,10 +566,10 @@ export default function LandingPage() {
                     <path d="M0,50 Q60,45 120,38 T240,25 T360,10 L400,6 L400,60 L0,60 Z" fill="currentColor" fillOpacity="0.1" />
                   </svg>
                 </div>
-              </div>
+              </StaggerItem>
 
               {/* Instant Transfers */}
-              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+              <StaggerItem className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-sky-600 icon-lg">qr_code_scanner</span>
@@ -584,10 +589,10 @@ export default function LandingPage() {
                     </div>
                   ))}
                 </div>
-              </div>
+              </StaggerItem>
 
               {/* Milestone Rewards */}
-              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+              <StaggerItem className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-amber-600 icon-lg">military_tech</span>
@@ -603,10 +608,10 @@ export default function LandingPage() {
                   </div>
                   <span className="font-mono text-sm text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded shrink-0">+₹1,000</span>
                 </div>
-              </div>
+              </StaggerItem>
 
               {/* Guardian Console */}
-              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+              <StaggerItem className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                 <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#0a2540] icon-lg">admin_panel_settings</span>
@@ -627,26 +632,26 @@ export default function LandingPage() {
                     </div>
                   ))}
                 </div>
-              </div>
-            </div>
+              </StaggerItem>
+            </StaggerContainer>
           </div>
         </section>
 
         {/* HOW IT WORKS */}
         <section id="how-it-works" className="w-full py-14 sm:py-20 md:py-28 bg-[#f1f4f7]/60 border-y border-slate-200/80">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-20">
+            <ScrollReveal direction="up" distance={30} duration={0.5} className="text-center max-w-2xl mx-auto mb-12 sm:mb-20">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Effortless Onboarding</span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Up and Running in Under 180 Seconds.</h2>
               <p className="text-sm sm:text-base text-[#4a5568] mt-2 leading-relaxed">No physical paper stacks. No branch queues. Seamless dual-app sync for student and parent.</p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            </ScrollReveal>
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 { num: '01', numColor: 'text-teal-700', icon: 'badge', iconBg: 'bg-teal-50 border-teal-100', iconColor: 'text-teal-700', title: '2-Min Digital KYC', desc: 'Scan student ID card & connect Aadhaar via secure DigiLocker token. Instant identity confirmation with scheduled banking partners.' },
                 { num: '02', numColor: 'text-sky-700', icon: 'link', iconBg: 'bg-sky-50 border-sky-100', iconColor: 'text-sky-700', title: 'Guardian Link', desc: 'Parent enters phone number to link their master console. Set daily budgets, approved merchants, and automated monthly allowance schedules.' },
                 { num: '03', numColor: 'text-[#0a2540]', icon: 'rocket_launch', iconBg: 'bg-slate-100 border-slate-200', iconColor: 'text-[#0a2540]', title: 'Save & Transact', desc: 'Virtual debit card is generated immediately. Physical holographic chip card arrives at campus or home in 3 working days.' },
               ].map((step, i) => (
-                <div key={i} className="bg-white border border-slate-200 p-6 sm:p-8 md:p-10 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.04)]">
+                <StaggerItem key={i} className="bg-white border border-slate-200 p-6 sm:p-8 md:p-10 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.04)]">
                   <div className="flex items-center justify-between mb-6 sm:mb-8">
                     <span className={`font-mono text-2xl sm:text-3xl font-bold ${step.numColor}`}>{step.num}</span>
                     <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${step.iconBg}`}>
@@ -655,41 +660,41 @@ export default function LandingPage() {
                   </div>
                   <h3 className="text-lg sm:text-xl font-bold text-[#0a2540]">{step.title}</h3>
                   <p className="text-sm text-[#4a5568] mt-2 leading-relaxed">{step.desc}</p>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </section>
 
         {/* REVIEWS */}
         <section id="reviews" className="w-full py-14 sm:py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 mb-12 sm:mb-20">
+            <StaggerContainer className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 mb-12 sm:mb-20">
               {[
                 { value: '₹12Cr+', label: 'Student Savings Vaults', color: 'text-[#0a2540]' },
                 { value: '50,000+', label: 'Active Student Accounts', color: 'text-teal-700' },
                 { value: '4.8★', label: 'Play Store & iOS Rating', color: 'text-amber-600' },
                 { value: '0', label: 'Fraud Incidents Reported', color: 'text-sky-700' },
               ].map((stat, i) => (
-                <div key={i} className="p-4 sm:p-6 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+                <StaggerItem key={i} className="p-4 sm:p-6 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
                   <p className={`font-mono text-2xl sm:text-3xl md:text-4xl font-extrabold ${stat.color}`}>{stat.value}</p>
                   <p className="text-[10px] sm:text-[11px] text-[#4a5568] mt-1 uppercase font-semibold tracking-wider">{stat.label}</p>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
 
-            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
+            <ScrollReveal direction="up" distance={30} duration={0.5} className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Verified Perspectives</span>
               <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Trusted by Students. Relied Upon by Guardians.</h2>
-            </div>
+            </ScrollReveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+            <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 { quote: '"PocketBank saved me from constantly asking my dad for money transfers during exam semester. The auto round-up helped me buy my mechanical keyboard in 3 months!"', name: 'Aditya Roy', role: 'Computer Science, BITS Pilani', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDC7mv6hcD5WCSeZiL13Ba9BpEVr9i0B21LxwLuuq1Cj4aJJptlTXam3pS_eexjrEUD9M_SK8xLP8ZZ7AKrQXOswXPggRqBb0cJHXZUYKf0A0N9G6qIPYaOGEtwIoQzjdThyQ45xvP9Tj2cYiES1DT-2FFw9qDVSY6p--jqhE846m6K0B5Wl4Tb8WGqbolEe3ktNFcNiX8Y7ZC4VHq-TYm23jwamFAflaFHvqLMTmyb1QEX3cDrd8gW0g' },
                 { quote: '"As a parent, handing a debit card to a 17-year-old was terrifying until PocketBank. I set a ₹500 daily food cap and can turn off online shopping whenever needed."', name: 'Meenakshi Sundaram', role: 'Mother of 1st-year Delhi Univ Student', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSywwbFkg8XtaafwVD27ukBub63WgSdMEfPXp_QkPlNmF4Ysihyg-nzLUJZcd7JuVkJNmrVy8ckm0Uxll3bqcYeIb7LWecufbXiCad_zH6Em7Z_s35NxEgqVN95b8eVoc5TvDv9NJX0NKCWkc9J4Lv86fuvmnzUX9ZcpsbUgQ4xEypung3Smma4ixcOU6ZFbKUbkaeL5tdmqpRIdj3hvwY9BVQ2PSk0oyUUG27EmRpDu5jV2AG6MEaA' },
                 { quote: '"The app feels like something Apple would build if they did student banking. The UPI tap speed is crazy fast, and the physical card finish looks super clean."', name: 'Tanvi Deshmukh', role: 'Design Major, NID Ahmedabad', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7PKmoMybSgfjIBrEt4DpCE4V3A7RK3-zTPHYlwej30dGK50xe0lTaPPkrK-Rzx3XUFfvnKWuT68pSdUnHfOSgcgt2xa94HqIygfjcill7nRpI0gca6Aacnu_-suxK_0HxVMu_2HZ3b8NO1xRXn_2sGdRFo4nG1fcFp9fkgDMdEboehbFXZLsNHIY6fcNtpUVrt7qw-CZNBcHF81-kAkY3rpoEmF1r61bJ4Rjv7lAmhk2f5BJlxI4MiQ' },
               ].map((t, i) => (
-                <div key={i} className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 md:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <StaggerItem key={i} className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 md:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                   <div>
                     <div className="flex items-center gap-1 text-amber-400 mb-4">
                       {[...Array(5)].map((_, s) => <span key={s} className="material-symbols-outlined icon-sm">star</span>)}
@@ -703,96 +708,100 @@ export default function LandingPage() {
                       <p className="text-[11px] text-[#4a5568]">{t.role}</p>
                     </div>
                   </div>
-                </div>
+                </StaggerItem>
               ))}
-            </div>
+            </StaggerContainer>
           </div>
         </section>
 
         {/* SECURITY */}
         <section id="security" className="w-full py-12 sm:py-16 md:py-24">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_10px_35px_rgba(10,37,64,0.06)]">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-                <div>
-                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 mb-4">
-                    <span className="material-symbols-outlined text-teal-700 icon-sm">verified_user</span>
-                    <span className="text-xs font-semibold uppercase text-teal-700">Dual-Vault Security Engine</span>
-                  </div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</h2>
-                  <p className="text-sm text-[#4a5568] mt-3 sm:mt-4 leading-relaxed">PocketBank operates with zero overdraft risk. Accounts cannot go into negative balance. Automated merchant code restriction blocks high-risk platforms while preserving student autonomy for everyday purchases.</p>
-                  <div className="mt-5 sm:mt-6 space-y-3">
-                    {[
-                      { icon: 'fingerprint', color: 'text-teal-700', text: 'Biometric FaceID & TouchID Authorization' },
-                      { icon: 'block', color: 'text-amber-600', text: 'Automatic MCC Blocking on Gaming & Gambling' },
-                      { icon: 'notification_important', color: 'text-sky-600', text: 'Immediate Push Notifications for Transactions >₹200' },
-                    ].map((item, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <span className={`material-symbols-outlined icon-md ${item.color}`}>{item.icon}</span>
-                        <span className="text-xs sm:text-sm font-medium text-[#0a2540]">{item.text}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="rounded-2xl bg-[#f7fafd] border border-slate-200 p-4 sm:p-6 space-y-3.5 sm:space-y-4 shadow-sm">
-                  <div className="flex items-center justify-between pb-3">
-                    <div>
-                      <h4 className="text-sm font-bold text-[#0a2540]">Live Parent Guardrail Controls</h4>
-                      <p className="text-[11px] text-[#4a5568]">Changes reflect immediately on student debit card</p>
+            <ScrollReveal direction="up" distance={40} duration={0.6}>
+              <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_10px_35px_rgba(10,37,64,0.06)]">
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+                  <div>
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 mb-4">
+                      <span className="material-symbols-outlined text-teal-700 icon-sm">verified_user</span>
+                      <span className="text-xs font-semibold uppercase text-teal-700">Dual-Vault Security Engine</span>
                     </div>
-                    <span className="material-symbols-outlined icon-lg text-[#0a2540]">phonelink_lock</span>
+                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</h2>
+                    <p className="text-sm text-[#4a5568] mt-3 sm:mt-4 leading-relaxed">PocketBank operates with zero overdraft risk. Accounts cannot go into negative balance. Automated merchant code restriction blocks high-risk platforms while preserving student autonomy for everyday purchases.</p>
+                    <div className="mt-5 sm:mt-6 space-y-3">
+                      {[
+                        { icon: 'fingerprint', color: 'text-teal-700', text: 'Biometric FaceID & TouchID Authorization' },
+                        { icon: 'block', color: 'text-amber-600', text: 'Automatic MCC Blocking on Gaming & Gambling' },
+                        { icon: 'notification_important', color: 'text-sky-600', text: 'Immediate Push Notifications for Transactions >₹200' },
+                      ].map((item, i) => (
+                        <div key={i} className="flex items-center gap-3">
+                          <span className={`material-symbols-outlined icon-md ${item.color}`}>{item.icon}</span>
+                          <span className="text-xs sm:text-sm font-medium text-[#0a2540]">{item.text}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                  <SecurityToggle label="Instant Card Freeze" sub="Lock all physical & virtual swipes instantly" icon="credit_card_off" iconColor="text-[#0a2540]" defaultOn={true} />
-                  <SecurityToggle label="International Swipes" sub="Foreign currency transactions" icon="public" iconColor="text-sky-600" defaultOn={false} />
-                  <SecurityToggle label="ATM Withdrawal Access" sub="Allow student to dispense cash at ATMs" icon="local_atm" iconColor="text-teal-600" defaultOn={true} />
+                  <div className="rounded-2xl bg-[#f7fafd] border border-slate-200 p-4 sm:p-6 space-y-3.5 sm:space-y-4 shadow-sm">
+                    <div className="flex items-center justify-between pb-3">
+                      <div>
+                        <h4 className="text-sm font-bold text-[#0a2540]">Live Parent Guardrail Controls</h4>
+                        <p className="text-[11px] text-[#4a5568]">Changes reflect immediately on student debit card</p>
+                      </div>
+                      <span className="material-symbols-outlined icon-lg text-[#0a2540]">phonelink_lock</span>
+                    </div>
+                    <SecurityToggle label="Instant Card Freeze" sub="Lock all physical & virtual swipes instantly" icon="credit_card_off" iconColor="text-[#0a2540]" defaultOn={true} />
+                    <SecurityToggle label="International Swipes" sub="Foreign currency transactions" icon="public" iconColor="text-sky-600" defaultOn={false} />
+                    <SecurityToggle label="ATM Withdrawal Access" sub="Allow student to dispense cash at ATMs" icon="local_atm" iconColor="text-teal-600" defaultOn={true} />
+                  </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </section>
 
         {/* CTA */}
         <section id="open-account" className="w-full py-14 sm:py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <div className="rounded-3xl p-6 sm:p-12 md:p-20 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2540 0%, #0f3b66 50%, #0d9488 100%)', boxShadow: '0 20px 60px rgba(10,37,64,0.25)' }}>
-              <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'rgba(13,148,136,0.2)', filter: 'blur(80px)' }} />
-              <div className="max-w-2xl mx-auto relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm mb-4 sm:mb-6">
-                  <span className="material-symbols-outlined icon-sm text-teal-300">bolt</span>
-                  <span className="text-[11px] font-semibold text-teal-200 uppercase tracking-wider">Instant Digital Issuance</span>
-                </div>
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</h2>
-                <p className="text-sm sm:text-base text-white/70 mt-3 mb-8 sm:mb-10 leading-relaxed">Step into the next chapter of smart campus money. Free account opening with zero balance requirement and custom holographic debit card.</p>
-                <div className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
-                  <div className="relative w-full">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-white/60">+91</span>
-                    <input type="tel" maxLength={10} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter Mobile Number"
-                      className="w-full pl-14 pr-4 py-3 sm:py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
+            <ScrollReveal direction="up" distance={40} duration={0.6}>
+              <div className="rounded-3xl p-6 sm:p-12 md:p-20 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2540 0%, #0f3b66 50%, #0d9488 100%)', boxShadow: '0 20px 60px rgba(10,37,64,0.25)' }}>
+                <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'rgba(13,148,136,0.2)', filter: 'blur(80px)' }} />
+                <div className="max-w-2xl mx-auto relative z-10">
+                  <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm mb-4 sm:mb-6">
+                    <span className="material-symbols-outlined icon-sm text-teal-300">bolt</span>
+                    <span className="text-[11px] font-semibold text-teal-200 uppercase tracking-wider">Instant Digital Issuance</span>
                   </div>
-                  <Show when="signed-out">
-                    <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
-                      <button
-                        type="button"
-                        className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider whitespace-nowrap text-[#0a2540] text-center cursor-pointer"
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</h2>
+                  <p className="text-sm sm:text-base text-white/70 mt-3 mb-8 sm:mb-10 leading-relaxed">Step into the next chapter of smart campus money. Free account opening with zero balance requirement and custom holographic debit card.</p>
+                  <div className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
+                    <div className="relative w-full">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-white/60">+91</span>
+                      <input type="tel" maxLength={10} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter Mobile Number"
+                        className="w-full pl-14 pr-4 py-3 sm:py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
+                    </div>
+                    <Show when="signed-out">
+                      <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
+                        <button
+                          type="button"
+                          className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider whitespace-nowrap text-[#0a2540] text-center cursor-pointer"
+                          style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}
+                        >
+                          Claim Card
+                        </button>
+                      </SignUpButton>
+                    </Show>
+                    <Show when="signed-in">
+                      <Link
+                        href="/home"
+                        className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540] text-center"
                         style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}
                       >
-                        Claim Card
-                      </button>
-                    </SignUpButton>
-                  </Show>
-                  <Show when="signed-in">
-                    <Link
-                      href="/home"
-                      className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540] text-center"
-                      style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}
-                    >
-                      Go to Dashboard
-                    </Link>
-                  </Show>
+                        Go to Dashboard
+                      </Link>
+                    </Show>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
                 </div>
-                <p className="text-[10px] sm:text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </section>
       </main>
@@ -803,7 +812,7 @@ export default function LandingPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 sm:gap-8 pb-8 sm:pb-10">
             <div className="col-span-2 sm:col-span-3 md:col-span-2">
               <div className="flex items-center gap-2 mb-3">
-                <Image src="/logo.png" alt="PocketBank Logo" width={32} height={32} className="object-contain" />
+                <Image src="/logo.webp" alt="PocketBank Logo" width={32} height={32} className="object-contain" />
                 <span className="font-bold text-lg text-[#0a2540]">Pocket<span className="text-[#0d9488]">Bank</span></span>
               </div>
               <p className="text-xs sm:text-sm text-[#4a5568] max-w-xs">Engineered for sovereign liquidity and modern digital capital. Secure institutional vaults, high-frequency yield, and uncompromised privacy.</p>

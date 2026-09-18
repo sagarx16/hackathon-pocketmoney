@@ -312,10 +312,10 @@ export default function LandingPage() {
               <Image src="/logo.png" alt="PocketBank Logo" width={38} height={38} className="object-contain" priority />
             </div>
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-extrabold text-lg sm:text-xl text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors">
+              <span className="font-black text-xl sm:text-[23px] text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors">
                 Pocket<span className="text-[#0d9488]">Bank</span>
               </span>
-              <span className="hidden xl:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-teal-50 text-teal-700 border border-teal-200/60">
+              <span className="hidden xl:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-extrabold tracking-wider uppercase bg-teal-50 text-teal-700 border border-teal-200/60">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#0d9488] animate-pulse" />
                 STUDENT
               </span>
@@ -323,7 +323,7 @@ export default function LandingPage() {
           </a>
 
           {/* Navigation Links */}
-          <nav className="pb-nav hidden lg:flex items-center gap-1.5 bg-slate-50/90 p-1 rounded-full border border-slate-200/70">
+          <nav className="pb-nav hidden lg:flex items-center gap-1.5 bg-slate-50/90 p-1.5 rounded-full border border-slate-200/80">
             {[
               ['Features', '#features', 'bolt'],
               ['How It Works', '#how-it-works', 'account_tree'],
@@ -333,21 +333,21 @@ export default function LandingPage() {
               <a
                 key={label}
                 href={href}
-                className="flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold text-[#4a5568] hover:text-[#0a2540] hover:bg-white hover:shadow-xs transition-all duration-200 no-underline"
+                className="flex items-center gap-1.5 px-4 py-2 rounded-full text-[14px] font-bold text-[#334155] hover:text-[#0a2540] hover:bg-white hover:shadow-xs transition-all duration-200 no-underline"
               >
-                <span className="material-symbols-outlined text-[15px] text-teal-600/80">{icon}</span>
-                {label}
+                <span className="material-symbols-outlined text-[17px] text-teal-600 font-bold">{icon}</span>
+                <span>{label}</span>
               </a>
             ))}
           </nav>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-1.5 sm:gap-2.5">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Show when="signed-out">
               <SignInButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
-                  className="hidden sm:inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors cursor-pointer"
+                  className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-[14px] font-bold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors cursor-pointer"
                 >
                   Sign In
                 </button>
@@ -355,13 +355,13 @@ export default function LandingPage() {
               <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
-                  className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer"
+                  className="pb-cta inline-flex items-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer"
                   style={{
                     background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
                   }}
                 >
                   <span>Open Account</span>
-                  <span className="material-symbols-outlined text-xs sm:text-sm transition-transform duration-200 group-hover:translate-x-0.5">
+                  <span className="material-symbols-outlined text-xs sm:text-sm font-bold transition-transform duration-200 group-hover:translate-x-0.5">
                     arrow_forward
                   </span>
                 </button>
@@ -371,9 +371,9 @@ export default function LandingPage() {
             <Show when="signed-in">
               <Link
                 href="/home"
-                className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full text-xs font-bold text-[#007168] bg-[#57fae9]/40 hover:bg-[#57fae9] transition-all no-underline"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-[13.5px] font-extrabold text-[#007168] bg-[#57fae9]/40 hover:bg-[#57fae9] transition-all no-underline shadow-2xs"
               >
-                <span className="material-symbols-outlined text-sm">dashboard</span>
+                <span className="material-symbols-outlined text-base">dashboard</span>
                 <span>Dashboard</span>
               </Link>
               <UserButton />
@@ -402,10 +402,10 @@ export default function LandingPage() {
                 key={label}
                 onClick={() => setMobileOpen(false)}
                 href={href}
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-sm font-semibold text-[#0a2540] hover:bg-slate-50 transition-colors no-underline"
+                className="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[15px] font-bold text-[#0a2540] hover:bg-slate-50 transition-colors no-underline"
               >
-                <span className="material-symbols-outlined text-teal-600 text-[18px]">{icon}</span>
-                {label}
+                <span className="material-symbols-outlined text-teal-600 text-[20px]">{icon}</span>
+                <span>{label}</span>
               </a>
             ))}
             <div className="pt-2 mt-1 border-t border-slate-100 flex items-center gap-2">
@@ -414,7 +414,7 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => setMobileOpen(false)}
-                    className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0a2540] hover:bg-slate-50 cursor-pointer"
+                    className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-sm font-bold text-[#0a2540] hover:bg-slate-50 cursor-pointer"
                   >
                     Sign In
                   </button>
@@ -423,7 +423,7 @@ export default function LandingPage() {
                   <button
                     type="button"
                     onClick={() => setMobileOpen(false)}
-                    className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
+                    className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-black uppercase tracking-wider shadow-sm cursor-pointer"
                   >
                     Get Started
                   </button>
@@ -433,7 +433,7 @@ export default function LandingPage() {
                 <Link
                   href="/home"
                   onClick={() => setMobileOpen(false)}
-                  className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider no-underline shadow-sm"
+                  className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-sm font-bold uppercase tracking-wider no-underline shadow-sm"
                 >
                   Go to Dashboard
                 </Link>

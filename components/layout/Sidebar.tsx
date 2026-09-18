@@ -44,11 +44,11 @@ export const Sidebar: React.FC = () => {
           >
             <span className="material-symbols-outlined icon-lg text-2xl">{mobileOpen ? 'close' : 'menu'}</span>
           </button>
-          <Link href="/home" className="flex items-center gap-2">
-            <div className="w-8 h-8 min-w-[32px] min-h-[32px] shrink-0 rounded-lg bg-white border border-[#c4c6ce]/40 p-0.5 flex items-center justify-center shadow-xs overflow-hidden">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-6 h-6 object-contain shrink-0" />
+          <Link href="/home" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 min-w-[36px] min-h-[36px] shrink-0 rounded-xl bg-white border border-[#c4c6ce]/40 p-1 flex items-center justify-center shadow-xs overflow-hidden">
+              <img src="/logo.png" alt="PocketBank Logo" className="w-7 h-7 object-contain shrink-0" />
             </div>
-            <span className="font-extrabold text-base sm:text-lg text-[#0a2540] tracking-tight">
+            <span className="font-black text-xl sm:text-2xl text-[#0a2540] tracking-tight">
               Pocket<span className="text-[#0d9488]">Bank</span>
             </span>
           </Link>
@@ -90,15 +90,15 @@ export const Sidebar: React.FC = () => {
       >
         {/* Brand Header + Mobile Close */}
         <div className="flex items-center justify-between px-2 pb-4 border-b border-[#c4c6ce]/30 mb-2">
-          <Link href="/home" onClick={() => setMobileOpen(false)} className="flex items-center gap-2.5 no-underline group flex-1">
-            <div className="w-9 h-9 min-w-[36px] min-h-[36px] shrink-0 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs overflow-hidden group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-7 h-7 object-contain shrink-0" />
+          <Link href="/home" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 no-underline group flex-1">
+            <div className="w-10 h-10 min-w-[40px] min-h-[40px] shrink-0 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs overflow-hidden group-hover:scale-105 transition-transform">
+              <img src="/logo.png" alt="PocketBank Logo" className="w-8 h-8 object-contain shrink-0" />
             </div>
             <div className="min-w-0 flex flex-col justify-center">
-              <span className="text-lg font-extrabold tracking-tight text-[#0a2540] leading-none">
+              <span className="text-[22px] sm:text-[23px] font-black tracking-tight text-[#0a2540] leading-none">
                 Pocket<span className="text-[#0d9488]">Bank</span>
               </span>
-              <span className="text-[10.5px] font-medium text-[#74777e] tracking-wide mt-1 leading-none">
+              <span className="text-[11px] font-bold text-[#74777e] tracking-wide mt-1 leading-none">
                 {isParentView ? 'Parent Control' : 'Student Edition'}
               </span>
             </div>
@@ -133,10 +133,10 @@ export const Sidebar: React.FC = () => {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl font-medium text-sm transition-all duration-150 group ${
+                className={`flex items-center gap-3.5 px-4 py-2.5 rounded-xl font-bold text-[14.5px] transition-all duration-150 group ${
                   isActive
-                    ? 'bg-[#57fae9] text-[#007168] font-bold shadow-xs'
-                    : 'text-[#43474d] hover:text-[#000f22] hover:bg-[#e5e8eb]/50'
+                    ? 'bg-[#57fae9] text-[#007168] font-extrabold shadow-xs'
+                    : 'text-[#334155] hover:text-[#000f22] hover:bg-[#e5e8eb]/60'
                 }`}
               >
                 <span className={`material-symbols-outlined icon-md ${isActive ? 'fill' : ''}`}>

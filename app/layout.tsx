@@ -88,7 +88,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body className="bg-[#f7fafd] text-[#181c1e] antialiased selection:bg-[#57fae9] selection:text-[#007168]">
         <ClerkProvider
-          publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_c2hhcmluZy1mbHktNjU2My5jbGVyay5hY2NvdW50cy5kZXYk'}
           appearance={{
             options: {
               unsafe_disableDevelopmentModeWarnings: true,

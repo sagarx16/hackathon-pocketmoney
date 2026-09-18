@@ -178,6 +178,7 @@ function CoverflowCarousel() {
   const [current, setCurrent] = useState(0);
   const [isAuto, setIsAuto] = useState(true);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const touchStartRef = useRef<number | null>(null);
   const total = coverCards.length;
   const next = useCallback(() => setCurrent((c) => (c + 1) % total), [total]);
   const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
@@ -187,45 +188,63 @@ function CoverflowCarousel() {
     return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [isAuto, next]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartRef.current === null) return;
+    const diff = touchStartRef.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) {
+      if (diff > 0) next();
+      else prev();
+    }
+    touchStartRef.current = null;
+  };
+
   const getStyle = (idx: number): React.CSSProperties => {
     let offset = idx - current;
     if (offset > total / 2) offset -= total;
     if (offset < -total / 2) offset += total;
     if (offset === 0) return { transform: 'translateX(0%) translateZ(100px) rotateY(0deg) scale(1)', opacity: 1, zIndex: 30, boxShadow: '0 20px 50px -10px rgba(10,37,64,0.18)', pointerEvents: 'auto' };
-    if (offset === 1) return { transform: 'translateX(90%) translateZ(-80px) rotateY(-35deg) scale(0.85)', opacity: 0.7, zIndex: 20, boxShadow: 'none', pointerEvents: 'none' };
-    if (offset === -1) return { transform: 'translateX(-90%) translateZ(-80px) rotateY(35deg) scale(0.85)', opacity: 0.7, zIndex: 20, boxShadow: 'none', pointerEvents: 'none' };
-    if (offset >= 2) return { transform: 'translateX(170%) translateZ(-160px) rotateY(-45deg) scale(0.7)', opacity: 0.2, zIndex: 10, boxShadow: 'none', pointerEvents: 'none' };
-    return { transform: 'translateX(-170%) translateZ(-160px) rotateY(45deg) scale(0.7)', opacity: 0.2, zIndex: 10, boxShadow: 'none', pointerEvents: 'none' };
+    if (offset === 1) return { transform: 'translateX(70%) translateZ(-70px) rotateY(-30deg) scale(0.85)', opacity: 0.7, zIndex: 20, boxShadow: 'none', pointerEvents: 'none' };
+    if (offset === -1) return { transform: 'translateX(-70%) translateZ(-70px) rotateY(30deg) scale(0.85)', opacity: 0.7, zIndex: 20, boxShadow: 'none', pointerEvents: 'none' };
+    if (offset >= 2) return { transform: 'translateX(130%) translateZ(-140px) rotateY(-40deg) scale(0.7)', opacity: 0.15, zIndex: 10, boxShadow: 'none', pointerEvents: 'none' };
+    return { transform: 'translateX(-130%) translateZ(-140px) rotateY(40deg) scale(0.7)', opacity: 0.15, zIndex: 10, boxShadow: 'none', pointerEvents: 'none' };
   };
 
   return (
-    <div className="w-full mt-16 md:mt-24 relative select-none">
-      <div className="flex items-center justify-between max-w-md mx-auto mb-8 px-4">
-        <button onClick={prev} className="w-10 h-10 rounded-full bg-white border border-slate-200 text-[#0a2540] flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm">
+    <div
+      className="w-full mt-10 sm:mt-16 md:mt-24 relative select-none overflow-hidden sm:overflow-visible pb-4"
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
+    >
+      <div className="flex items-center justify-between max-w-md mx-auto mb-6 sm:mb-8 px-4">
+        <button onClick={prev} aria-label="Previous card" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-[#0a2540] flex items-center justify-center hover:bg-slate-50 transition-colors shadow-xs active:scale-95">
           <span className="material-symbols-outlined icon-sm">chevron_left</span>
         </button>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 sm:gap-3">
           <div className="flex items-center gap-1.5">
             {coverCards.map((_, i) => (
-              <button key={i} onClick={() => setCurrent(i)} className={`rounded-full transition-all duration-300 ${i === current ? 'w-6 h-2 bg-[#0d9488]' : 'w-2 h-2 bg-slate-300'}`} />
+              <button key={i} aria-label={`Go to slide ${i + 1}`} onClick={() => setCurrent(i)} className={`rounded-full transition-all duration-300 ${i === current ? 'w-5 sm:w-6 h-2 bg-[#0d9488]' : 'w-2 h-2 bg-slate-300'}`} />
             ))}
           </div>
-          <button onClick={() => setIsAuto((a) => !a)} className="px-3 py-1 rounded-full bg-white border border-slate-200 text-teal-700 text-xs font-semibold flex items-center gap-1 hover:bg-slate-50 transition-colors shadow-sm uppercase">
-            <span className="material-symbols-outlined icon-sm">{isAuto ? 'pause' : 'play_arrow'}</span>
-            {isAuto ? 'AUTO' : 'PAUSED'}
+          <button onClick={() => setIsAuto((a) => !a)} className="px-2.5 sm:px-3 py-1 rounded-full bg-white border border-slate-200 text-teal-700 text-[11px] sm:text-xs font-semibold flex items-center gap-1 hover:bg-slate-50 transition-colors shadow-xs uppercase">
+            <span className="material-symbols-outlined text-[14px] sm:text-base">{isAuto ? 'pause' : 'play_arrow'}</span>
+            <span>{isAuto ? 'AUTO' : 'PAUSED'}</span>
           </button>
         </div>
-        <button onClick={next} className="w-10 h-10 rounded-full bg-white border border-slate-200 text-[#0a2540] flex items-center justify-center hover:bg-slate-50 transition-colors shadow-sm">
+        <button onClick={next} aria-label="Next card" className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white border border-slate-200 text-[#0a2540] flex items-center justify-center hover:bg-slate-50 transition-colors shadow-xs active:scale-95">
           <span className="material-symbols-outlined icon-sm">chevron_right</span>
         </button>
       </div>
-      <div className="relative w-full h-[450px] md:h-[500px] flex items-center justify-center overflow-visible" style={{ perspective: '1200px' }}>
+      <div className="relative w-full h-[420px] sm:h-[450px] md:h-[500px] flex items-center justify-center overflow-visible" style={{ perspective: '1000px' }}>
         {coverCards.map((card, idx) => (
           <div key={idx} onClick={() => setCurrent(idx)}
-            style={{ ...getStyle(idx), transformStyle: 'preserve-3d', transition: 'all 0.5s ease', cursor: 'pointer' }}
-            className="absolute w-[300px] sm:w-[350px] md:w-[380px] h-[400px] md:h-[430px] rounded-2xl bg-white border border-slate-200 p-6 flex flex-col shadow-[0_12px_35px_rgba(10,37,64,0.08)]">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-[11px] font-semibold text-[#4a5568] uppercase tracking-widest">{card.label}</span>
+            style={{ ...getStyle(idx), transformStyle: 'preserve-3d', transition: 'all 0.45s ease', cursor: 'pointer' }}
+            className="absolute w-[285px] sm:w-[340px] md:w-[380px] h-[385px] sm:h-[400px] md:h-[430px] rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 flex flex-col shadow-[0_12px_35px_rgba(10,37,64,0.08)]">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
+              <span className="text-[10px] sm:text-[11px] font-semibold text-[#4a5568] uppercase tracking-widest">{card.label}</span>
               <span className="text-[10px] text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded">{card.badge}</span>
             </div>
             <div className="flex flex-col flex-1">{card.content}</div>
@@ -274,16 +293,16 @@ export default function LandingPage() {
       `}</style>
 
       {/* HEADER */}
-      <header className="fixed top-3 sm:top-5 left-0 right-0 z-50 px-4 sm:px-6 md:px-8 max-w-[1240px] mx-auto transition-all duration-300">
-        <div className="bg-white/90 backdrop-blur-xl border border-slate-200/90 shadow-[0_10px_35px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-2xl md:rounded-full px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-4">
+      <header className="fixed top-2 sm:top-5 left-0 right-0 z-50 px-3 sm:px-6 md:px-8 max-w-[1240px] mx-auto transition-all duration-300">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-[0_8px_30px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-2xl md:rounded-full px-3.5 sm:px-6 py-2 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
 
           {/* Brand */}
-          <a href="#" className="flex items-center gap-3 no-underline group">
-            <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-white shadow-xs border border-slate-200/80 p-0.5 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
+          <a href="#" className="flex items-center gap-2 sm:gap-3 no-underline group shrink-0">
+            <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-xl overflow-hidden bg-white shadow-xs border border-slate-200/80 p-0.5 flex items-center justify-center transition-all duration-300 group-hover:scale-105 group-hover:shadow-md">
               <Image src="/logo.png" alt="PocketBank Logo" width={38} height={38} className="object-contain" priority />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="font-extrabold text-xl text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <span className="font-extrabold text-lg sm:text-xl text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors">
                 Pocket<span className="text-[#0d9488]">Bank</span>
               </span>
               <span className="hidden xl:inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold tracking-wider uppercase bg-teal-50 text-teal-700 border border-teal-200/60">
@@ -313,44 +332,45 @@ export default function LandingPage() {
           </nav>
 
           {/* Right Controls */}
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5">
             <Link
               href="/login"
-              className="hidden sm:inline-flex items-center px-4 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors no-underline"
+              className="hidden sm:inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors no-underline"
             >
               Sign In
             </Link>
             <Link
               href="/login"
-              className="pb-cta inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all"
+              className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all"
               style={{
                 background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
               }}
             >
               <span>Open Account</span>
-              <span className="material-symbols-outlined text-sm transition-transform duration-200 group-hover:translate-x-0.5">
+              <span className="material-symbols-outlined text-xs sm:text-sm transition-transform duration-200 group-hover:translate-x-0.5">
                 arrow_forward
               </span>
             </Link>
             <Link
               href="/login"
               title="Student Portal"
-              className="w-9 h-9 rounded-full bg-slate-100 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 flex items-center justify-center text-[#0a2540] hover:text-teal-700 transition-all shadow-2xs no-underline"
+              className="hidden sm:flex w-9 h-9 rounded-full bg-slate-100 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 items-center justify-center text-[#0a2540] hover:text-teal-700 transition-all shadow-2xs no-underline"
             >
               <span className="material-symbols-outlined text-[18px]">person</span>
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex lg:hidden w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 items-center justify-center text-[#0a2540] cursor-pointer transition-colors"
+              aria-label="Toggle navigation menu"
+              className="flex lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 items-center justify-center text-[#0a2540] cursor-pointer transition-colors"
             >
-              <span className="material-symbols-outlined text-[20px]">{mobileOpen ? 'close' : 'menu'}</span>
+              <span className="material-symbols-outlined text-[18px] sm:text-[20px]">{mobileOpen ? 'close' : 'menu'}</span>
             </button>
           </div>
         </div>
 
         {/* Mobile menu dropdown */}
         {mobileOpen && (
-          <div className="lg:hidden mt-2 p-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200 shadow-xl flex flex-col gap-2">
+          <div className="lg:hidden mt-2 p-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200 shadow-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
             {[
               ['Features', '#features', 'bolt'],
               ['How It Works', '#how-it-works', 'account_tree'],
@@ -371,14 +391,14 @@ export default function LandingPage() {
               <Link
                 href="/login"
                 onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0a2540] no-underline"
+                className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0a2540] no-underline hover:bg-slate-50"
               >
                 Sign In
               </Link>
               <Link
                 href="/login"
                 onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider no-underline"
+                className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider no-underline shadow-sm"
               >
                 Get Started
               </Link>
@@ -388,21 +408,21 @@ export default function LandingPage() {
       </header>
 
       {/* MAIN */}
-      <main className="pt-28 sm:pt-32 relative overflow-hidden">
+      <main className="pt-24 sm:pt-32 relative overflow-hidden">
         {/* Ambient glows */}
         <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] rounded-full" style={{ background: 'linear-gradient(135deg, rgba(186,230,253,0.5), rgba(204,251,241,0.6), rgba(199,210,254,0.4))', filter: 'blur(120px)' }} />
         <div className="pointer-events-none absolute top-[1400px] -left-48 w-[600px] h-[600px] rounded-full" style={{ background: 'rgba(204,251,241,0.35)', filter: 'blur(140px)' }} />
         <div className="pointer-events-none absolute top-[2600px] -right-48 w-[600px] h-[600px] rounded-full" style={{ background: 'rgba(186,230,253,0.35)', filter: 'blur(140px)' }} />
 
         {/* HERO */}
-        <section className="relative w-full pt-12 md:pt-20 pb-20 md:pb-28 overflow-hidden">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12 flex flex-col items-center text-center relative z-10">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
-              <span className="pb-glow w-2 h-2 rounded-full bg-[#0d9488] inline-block" />
-              <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider">Next-Gen Student Banking • RBI Regulated Partner</span>
+        <section className="relative w-full pt-8 sm:pt-16 md:pt-20 pb-14 sm:pb-20 md:pb-28 overflow-hidden">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 flex flex-col items-center text-center relative z-10">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-4 sm:mb-6 max-w-full">
+              <span className="pb-glow w-2 h-2 rounded-full bg-[#0d9488] shrink-0" />
+              <span className="text-[10px] sm:text-xs font-semibold uppercase text-[#0d9488] tracking-wider truncate">Next-Gen Student Banking • RBI Regulated Partner</span>
             </div>
 
-            <h1 className="font-extrabold text-[#0a2540] max-w-4xl mx-auto" style={{ fontSize: 'clamp(36px,6vw,60px)', lineHeight: 1.12, letterSpacing: '-0.03em' }}>
+            <h1 className="font-extrabold text-[#0a2540] max-w-4xl mx-auto" style={{ fontSize: 'clamp(28px,7.5vw,58px)', lineHeight: 1.15, letterSpacing: '-0.03em' }}>
               Banking Built for Students.{' '}
               <br className="hidden sm:inline" />
               <span style={{ background: 'linear-gradient(to right, #0d9488, #0284c7, #0a2540)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text' }}>
@@ -410,16 +430,16 @@ export default function LandingPage() {
               </span>
             </h1>
 
-            <p className="text-lg text-[#4a5568] max-w-2xl mt-4 mb-10 leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg text-[#4a5568] max-w-2xl mt-3 sm:mt-4 mb-8 sm:mb-10 leading-relaxed px-2">
               Zero hidden fees. High-yield savings. Instant P2P transfers with parent-guided smart limits engineered for sovereign financial independence.
             </p>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3">
-              <Link href="/login" className="pb-cta inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline" style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}>
+            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-4 sm:px-0">
+              <Link href="/login" className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline" style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}>
                 <span>Open an Account</span>
                 <span className="material-symbols-outlined icon-sm">arrow_forward</span>
               </Link>
-              <a href="#how-it-works" className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0a2540] bg-white border border-slate-200 hover:bg-slate-50 shadow-sm no-underline transition-all">
+              <a href="#how-it-works" className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0a2540] bg-white border border-slate-200 hover:bg-slate-50 shadow-sm no-underline transition-all">
                 <span className="material-symbols-outlined text-[#0d9488] icon-sm">play_circle</span>
                 <span>See How It Works</span>
               </a>
@@ -430,9 +450,9 @@ export default function LandingPage() {
         </section>
 
         {/* TRUST STRIP */}
-        <section className="w-full py-8">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="rounded-2xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(10,37,64,0.04)] p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+        <section className="w-full py-4 sm:py-8">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="rounded-2xl bg-white border border-slate-200 shadow-[0_4px_20px_rgba(10,37,64,0.04)] p-4 sm:p-6 md:p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
               {[
                 { icon: 'enhanced_encryption', bg: 'bg-teal-50 border-teal-100', color: 'text-teal-700', title: '256-Bit Military Grade', sub: 'End-to-end telemetry' },
                 { icon: 'account_balance', bg: 'bg-sky-50 border-sky-100', color: 'text-sky-700', title: 'RBI-Compliant Partner', sub: 'Scheduled bank backing' },
@@ -454,30 +474,30 @@ export default function LandingPage() {
         </section>
 
         {/* FEATURES */}
-        <section id="features" className="w-full py-20 md:py-28">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="max-w-2xl mb-16">
+        <section id="features" className="w-full py-14 sm:py-20 md:py-28">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="max-w-2xl mb-10 sm:mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-slate-200 shadow-sm mb-3">
                 <span className="material-symbols-outlined text-[#0d9488] icon-sm">tune</span>
                 <span className="text-xs font-semibold uppercase text-[#0d9488]">Next-Gen Architecture</span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-[#0a2540] tracking-tight">High-Precision Banking for High-Growth Minds.</h2>
-              <p className="text-base text-[#4a5568] mt-2">Engineered without legacy bank bloatware. Clean ergonomics, programmable goal vaults, and uncompromised transparency.</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] tracking-tight">High-Precision Banking for High-Growth Minds.</h2>
+              <p className="text-sm sm:text-base text-[#4a5568] mt-2">Engineered without legacy bank bloatware. Clean ergonomics, programmable goal vaults, and uncompromised transparency.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 sm:gap-8">
               {/* Smart Savings */}
-              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
-                <div className="flex items-center justify-between mb-8">
+              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-teal-700 icon-lg">savings</span>
                   </div>
-                  <span className="font-mono text-xl font-bold text-teal-700 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">4.5% APY</span>
+                  <span className="font-mono text-base sm:text-xl font-bold text-teal-700 bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">4.5% APY</span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#0a2540]">Smart Savings & Multi-Vaults</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0a2540]">Smart Savings & Multi-Vaults</h3>
                 <p className="text-sm text-[#4a5568] mt-2 max-w-lg leading-relaxed">Automate daily round-ups on campus snacks, lock funds into bespoke target vaults, and earn institutional-grade interest calculated daily and paid monthly.</p>
-                <div className="mt-8 p-4 rounded-xl bg-[#f1f4f7] border border-slate-200/80">
-                  <div className="flex justify-between mb-3">
+                <div className="mt-6 sm:mt-8 p-3.5 sm:p-4 rounded-xl bg-[#f1f4f7] border border-slate-200/80">
+                  <div className="flex flex-col sm:flex-row sm:justify-between gap-1 sm:gap-0 mb-3">
                     <span className="text-xs font-medium text-[#4a5568]">Savings Trajectory (Round-Ups Included)</span>
                     <span className="font-mono text-xs text-teal-700 font-bold">+34.8% vs Standard Savings</span>
                   </div>
@@ -489,58 +509,58 @@ export default function LandingPage() {
               </div>
 
               {/* Instant Transfers */}
-              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
-                <div className="flex items-center justify-between mb-8">
+              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 relative overflow-hidden shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-sky-600 icon-lg">qr_code_scanner</span>
                   </div>
                   <span className="text-xs font-bold text-sky-700 uppercase bg-sky-50 border border-sky-100 px-3 py-1 rounded-full">Sub-Second</span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#0a2540]">Instant Transfers & QR Splits</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0a2540]">Instant Transfers & QR Splits</h3>
                 <p className="text-sm text-[#4a5568] mt-2 leading-relaxed">Zero-fee campus UPI. Split hostel laundry, cafeteria food, or books instantly without awkward ledger calculations.</p>
-                <div className="mt-8 space-y-2.5">
+                <div className="mt-6 sm:mt-8 space-y-2.5">
                   {[{ init: 'RS', name: 'Campus Mess Split', amt: '₹120 • Done', bg: 'bg-sky-600' }, { init: 'KM', name: 'Printouts Xerox', amt: '₹45 • Done', bg: 'bg-teal-600' }].map((t, i) => (
                     <div key={i} className="p-2.5 rounded-lg bg-[#f1f4f7] border border-slate-100 flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className={`w-7 h-7 rounded-full ${t.bg} flex items-center justify-center text-[11px] font-bold text-white`}>{t.init}</div>
-                        <span className="text-xs font-semibold text-[#0a2540]">{t.name}</span>
+                        <span className="text-xs font-semibold text-[#0a2540] truncate max-w-[140px] sm:max-w-none">{t.name}</span>
                       </div>
-                      <span className="font-mono text-xs text-[#0a2540] font-bold">{t.amt}</span>
+                      <span className="font-mono text-xs text-[#0a2540] font-bold shrink-0">{t.amt}</span>
                     </div>
                   ))}
                 </div>
               </div>
 
               {/* Milestone Rewards */}
-              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
-                <div className="flex items-center justify-between mb-8">
+              <div className="pb-card md:col-span-5 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center">
                     <span className="material-symbols-outlined text-amber-600 icon-lg">military_tech</span>
                   </div>
                   <span className="text-xs font-bold text-amber-700 uppercase bg-amber-50 border border-amber-100 px-3 py-1 rounded-full">Earn Allowance</span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#0a2540]">Milestone-Based Rewards</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0a2540]">Milestone-Based Rewards</h3>
                 <p className="text-sm text-[#4a5568] mt-2 leading-relaxed">Parents set bounties for academic performance, household chores, or reading challenges. Allowance is earned, not just handed out.</p>
-                <div className="mt-8 p-4 rounded-xl bg-[#f1f4f7] border border-slate-100 flex items-center justify-between">
+                <div className="mt-6 sm:mt-8 p-3.5 sm:p-4 rounded-xl bg-[#f1f4f7] border border-slate-100 flex items-center justify-between">
                   <div>
                     <p className="text-xs font-bold text-[#0a2540]">Physics Mock Test A+</p>
                     <p className="text-[11px] text-[#4a5568]">Auto-transferred to M3 Vault</p>
                   </div>
-                  <span className="font-mono text-sm text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded">+₹1,000</span>
+                  <span className="font-mono text-sm text-teal-700 font-bold bg-teal-50 px-2 py-0.5 rounded shrink-0">+₹1,000</span>
                 </div>
               </div>
 
               {/* Guardian Console */}
-              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
-                <div className="flex items-center justify-between mb-8">
+              <div className="pb-card md:col-span-7 rounded-2xl bg-white border border-slate-200 p-5 sm:p-8 md:p-10 shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <div className="flex items-center justify-between mb-6 sm:mb-8">
                   <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center">
                     <span className="material-symbols-outlined text-[#0a2540] icon-lg">admin_panel_settings</span>
                   </div>
                   <span className="text-xs font-bold text-[#0a2540] uppercase bg-slate-100 px-3 py-1 rounded-full">Guarded Liberty</span>
                 </div>
-                <h3 className="text-2xl font-bold text-[#0a2540]">Guardian Oversight Console</h3>
+                <h3 className="text-xl sm:text-2xl font-bold text-[#0a2540]">Guardian Oversight Console</h3>
                 <p className="text-sm text-[#4a5568] mt-2 max-w-lg leading-relaxed">Autonomous freedom within safe guardrails. Dynamic daily spending caps, one-click ATM lock, and automatic merchant categorization alerts.</p>
-                <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
                     { label: 'Category Filter', value: 'Gaming Restrict', color: 'text-[#0a2540]' },
                     { label: 'Immediate Action', value: '1-Tap Card Freeze', color: 'text-rose-700' },
@@ -558,27 +578,27 @@ export default function LandingPage() {
         </section>
 
         {/* HOW IT WORKS */}
-        <section id="how-it-works" className="w-full py-20 md:py-28 bg-[#f1f4f7]/60 border-y border-slate-200/80">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="text-center max-w-2xl mx-auto mb-20">
+        <section id="how-it-works" className="w-full py-14 sm:py-20 md:py-28 bg-[#f1f4f7]/60 border-y border-slate-200/80">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-20">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Effortless Onboarding</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Up and Running in Under 180 Seconds.</h2>
-              <p className="text-base text-[#4a5568] mt-2 leading-relaxed">No physical paper stacks. No branch queues. Seamless dual-app sync for student and parent.</p>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Up and Running in Under 180 Seconds.</h2>
+              <p className="text-sm sm:text-base text-[#4a5568] mt-2 leading-relaxed">No physical paper stacks. No branch queues. Seamless dual-app sync for student and parent.</p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 { num: '01', numColor: 'text-teal-700', icon: 'badge', iconBg: 'bg-teal-50 border-teal-100', iconColor: 'text-teal-700', title: '2-Min Digital KYC', desc: 'Scan student ID card & connect Aadhaar via secure DigiLocker token. Instant identity confirmation with scheduled banking partners.' },
                 { num: '02', numColor: 'text-sky-700', icon: 'link', iconBg: 'bg-sky-50 border-sky-100', iconColor: 'text-sky-700', title: 'Guardian Link', desc: 'Parent enters phone number to link their master console. Set daily budgets, approved merchants, and automated monthly allowance schedules.' },
                 { num: '03', numColor: 'text-[#0a2540]', icon: 'rocket_launch', iconBg: 'bg-slate-100 border-slate-200', iconColor: 'text-[#0a2540]', title: 'Save & Transact', desc: 'Virtual debit card is generated immediately. Physical holographic chip card arrives at campus or home in 3 working days.' },
               ].map((step, i) => (
-                <div key={i} className="bg-white border border-slate-200 p-10 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.04)]">
-                  <div className="flex items-center justify-between mb-8">
-                    <span className={`font-mono text-3xl font-bold ${step.numColor}`}>{step.num}</span>
+                <div key={i} className="bg-white border border-slate-200 p-6 sm:p-8 md:p-10 rounded-2xl shadow-[0_4px_20px_rgba(10,37,64,0.04)]">
+                  <div className="flex items-center justify-between mb-6 sm:mb-8">
+                    <span className={`font-mono text-2xl sm:text-3xl font-bold ${step.numColor}`}>{step.num}</span>
                     <div className={`w-10 h-10 rounded-xl border flex items-center justify-center ${step.iconBg}`}>
                       <span className={`material-symbols-outlined icon-md ${step.iconColor}`}>{step.icon}</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold text-[#0a2540]">{step.title}</h3>
+                  <h3 className="text-lg sm:text-xl font-bold text-[#0a2540]">{step.title}</h3>
                   <p className="text-sm text-[#4a5568] mt-2 leading-relaxed">{step.desc}</p>
                 </div>
               ))}
@@ -587,42 +607,42 @@ export default function LandingPage() {
         </section>
 
         {/* REVIEWS */}
-        <section id="reviews" className="w-full py-20 md:py-28">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
+        <section id="reviews" className="w-full py-14 sm:py-20 md:py-28">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-6 mb-12 sm:mb-20">
               {[
                 { value: '₹12Cr+', label: 'Student Savings Vaults', color: 'text-[#0a2540]' },
                 { value: '50,000+', label: 'Active Student Accounts', color: 'text-teal-700' },
                 { value: '4.8★', label: 'Play Store & iOS Rating', color: 'text-amber-600' },
                 { value: '0', label: 'Fraud Incidents Reported', color: 'text-sky-700' },
               ].map((stat, i) => (
-                <div key={i} className="p-6 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
-                  <p className={`font-mono text-3xl md:text-4xl font-extrabold ${stat.color}`}>{stat.value}</p>
-                  <p className="text-[11px] text-[#4a5568] mt-1 uppercase font-semibold tracking-wider">{stat.label}</p>
+                <div key={i} className="p-4 sm:p-6 rounded-2xl bg-white border border-slate-200 text-center shadow-sm">
+                  <p className={`font-mono text-2xl sm:text-3xl md:text-4xl font-extrabold ${stat.color}`}>{stat.value}</p>
+                  <p className="text-[10px] sm:text-[11px] text-[#4a5568] mt-1 uppercase font-semibold tracking-wider">{stat.label}</p>
                 </div>
               ))}
             </div>
 
-            <div className="text-center max-w-2xl mx-auto mb-16">
+            <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Verified Perspectives</span>
-              <h2 className="text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Trusted by Students. Relied Upon by Guardians.</h2>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Trusted by Students. Relied Upon by Guardians.</h2>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
                 { quote: '"PocketBank saved me from constantly asking my dad for money transfers during exam semester. The auto round-up helped me buy my mechanical keyboard in 3 months!"', name: 'Aditya Roy', role: 'Computer Science, BITS Pilani', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDC7mv6hcD5WCSeZiL13Ba9BpEVr9i0B21LxwLuuq1Cj4aJJptlTXam3pS_eexjrEUD9M_SK8xLP8ZZ7AKrQXOswXPggRqBb0cJHXZUYKf0A0N9G6qIPYaOGEtwIoQzjdThyQ45xvP9Tj2cYiES1DT-2FFw9qDVSY6p--jqhE846m6K0B5Wl4Tb8WGqbolEe3ktNFcNiX8Y7ZC4VHq-TYm23jwamFAflaFHvqLMTmyb1QEX3cDrd8gW0g' },
                 { quote: '"As a parent, handing a debit card to a 17-year-old was terrifying until PocketBank. I set a ₹500 daily food cap and can turn off online shopping whenever needed."', name: 'Meenakshi Sundaram', role: 'Mother of 1st-year Delhi Univ Student', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSywwbFkg8XtaafwVD27ukBub63WgSdMEfPXp_QkPlNmF4Ysihyg-nzLUJZcd7JuVkJNmrVy8ckm0Uxll3bqcYeIb7LWecufbXiCad_zH6Em7Z_s35NxEgqVN95b8eVoc5TvDv9NJX0NKCWkc9J4Lv86fuvmnzUX9ZcpsbUgQ4xEypung3Smma4ixcOU6ZFbKUbkaeL5tdmqpRIdj3hvwY9BVQ2PSk0oyUUG27EmRpDu5jV2AG6MEaA' },
                 { quote: '"The app feels like something Apple would build if they did student banking. The UPI tap speed is crazy fast, and the physical card finish looks super clean."', name: 'Tanvi Deshmukh', role: 'Design Major, NID Ahmedabad', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7PKmoMybSgfjIBrEt4DpCE4V3A7RK3-zTPHYlwej30dGK50xe0lTaPPkrK-Rzx3XUFfvnKWuT68pSdUnHfOSgcgt2xa94HqIygfjcill7nRpI0gca6Aacnu_-suxK_0HxVMu_2HZ3b8NO1xRXn_2sGdRFo4nG1fcFp9fkgDMdEboehbFXZLsNHIY6fcNtpUVrt7qw-CZNBcHF81-kAkY3rpoEmF1r61bJ4Rjv7lAmhk2f5BJlxI4MiQ' },
               ].map((t, i) => (
-                <div key={i} className="rounded-2xl bg-white border border-slate-200 p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
+                <div key={i} className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 md:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                   <div>
                     <div className="flex items-center gap-1 text-amber-400 mb-4">
                       {[...Array(5)].map((_, s) => <span key={s} className="material-symbols-outlined icon-sm">star</span>)}
                     </div>
                     <p className="text-sm text-[#4a5568] leading-relaxed">{t.quote}</p>
                   </div>
-                  <div className="flex items-center gap-3 pt-6 mt-6 border-t border-slate-100">
-                    <img src={t.avatar} alt={t.name} className="w-11 h-11 rounded-full object-cover shrink-0 border border-slate-200" />
+                  <div className="flex items-center gap-3 pt-4 sm:pt-6 mt-6 border-t border-slate-100">
+                    <img src={t.avatar} alt={t.name} className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover shrink-0 border border-slate-200" />
                     <div>
                       <p className="text-xs font-bold text-[#0a2540]">{t.name}</p>
                       <p className="text-[11px] text-[#4a5568]">{t.role}</p>
@@ -635,18 +655,18 @@ export default function LandingPage() {
         </section>
 
         {/* SECURITY */}
-        <section id="security" className="w-full py-16 md:py-24">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="rounded-3xl bg-white border border-slate-200 p-10 md:p-14 relative overflow-hidden shadow-[0_10px_35px_rgba(10,37,64,0.06)]">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <section id="security" className="w-full py-12 sm:py-16 md:py-24">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_10px_35px_rgba(10,37,64,0.06)]">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                 <div>
                   <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-50 border border-teal-100 mb-4">
                     <span className="material-symbols-outlined text-teal-700 icon-sm">verified_user</span>
                     <span className="text-xs font-semibold uppercase text-teal-700">Dual-Vault Security Engine</span>
                   </div>
-                  <h2 className="text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</h2>
-                  <p className="text-sm text-[#4a5568] mt-4 leading-relaxed">PocketBank operates with zero overdraft risk. Accounts cannot go into negative balance. Automated merchant code restriction blocks high-risk platforms while preserving student autonomy for everyday purchases.</p>
-                  <div className="mt-6 space-y-3">
+                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</h2>
+                  <p className="text-sm text-[#4a5568] mt-3 sm:mt-4 leading-relaxed">PocketBank operates with zero overdraft risk. Accounts cannot go into negative balance. Automated merchant code restriction blocks high-risk platforms while preserving student autonomy for everyday purchases.</p>
+                  <div className="mt-5 sm:mt-6 space-y-3">
                     {[
                       { icon: 'fingerprint', color: 'text-teal-700', text: 'Biometric FaceID & TouchID Authorization' },
                       { icon: 'block', color: 'text-amber-600', text: 'Automatic MCC Blocking on Gaming & Gambling' },
@@ -654,12 +674,12 @@ export default function LandingPage() {
                     ].map((item, i) => (
                       <div key={i} className="flex items-center gap-3">
                         <span className={`material-symbols-outlined icon-md ${item.color}`}>{item.icon}</span>
-                        <span className="text-sm font-medium text-[#0a2540]">{item.text}</span>
+                        <span className="text-xs sm:text-sm font-medium text-[#0a2540]">{item.text}</span>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div className="rounded-2xl bg-[#f7fafd] border border-slate-200 p-6 space-y-4 shadow-sm">
+                <div className="rounded-2xl bg-[#f7fafd] border border-slate-200 p-4 sm:p-6 space-y-3.5 sm:space-y-4 shadow-sm">
                   <div className="flex items-center justify-between pb-3">
                     <div>
                       <h4 className="text-sm font-bold text-[#0a2540]">Live Parent Guardrail Controls</h4>
@@ -677,28 +697,28 @@ export default function LandingPage() {
         </section>
 
         {/* CTA */}
-        <section id="open-account" className="w-full py-20 md:py-28">
-          <div className="max-w-[1280px] mx-auto px-5 md:px-12">
-            <div className="rounded-3xl p-12 md:p-20 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2540 0%, #0f3b66 50%, #0d9488 100%)', boxShadow: '0 20px 60px rgba(10,37,64,0.25)' }}>
+        <section id="open-account" className="w-full py-14 sm:py-20 md:py-28">
+          <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
+            <div className="rounded-3xl p-6 sm:p-12 md:p-20 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2540 0%, #0f3b66 50%, #0d9488 100%)', boxShadow: '0 20px 60px rgba(10,37,64,0.25)' }}>
               <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'rgba(13,148,136,0.2)', filter: 'blur(80px)' }} />
               <div className="max-w-2xl mx-auto relative z-10">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/15 backdrop-blur-sm mb-4 sm:mb-6">
                   <span className="material-symbols-outlined icon-sm text-teal-300">bolt</span>
                   <span className="text-[11px] font-semibold text-teal-200 uppercase tracking-wider">Instant Digital Issuance</span>
                 </div>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</h2>
-                <p className="text-base text-white/70 mt-3 mb-10 leading-relaxed">Step into the next chapter of smart campus money. Free account opening with zero balance requirement and custom holographic debit card.</p>
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</h2>
+                <p className="text-sm sm:text-base text-white/70 mt-3 mb-8 sm:mb-10 leading-relaxed">Step into the next chapter of smart campus money. Free account opening with zero balance requirement and custom holographic debit card.</p>
                 <div className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
                   <div className="relative w-full">
                     <span className="absolute left-4 top-1/2 -translate-y-1/2 font-mono text-sm text-white/60">+91</span>
                     <input type="tel" maxLength={10} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter Mobile Number"
-                      className="w-full pl-14 pr-4 py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
+                      className="w-full pl-14 pr-4 py-3 sm:py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
                   </div>
-                  <Link href="/login" className="pb-cta shrink-0 px-8 py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540]" style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}>
+                  <Link href="/login" className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540] text-center" style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}>
                     Claim Card
                   </Link>
                 </div>
-                <p className="text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
+                <p className="text-[10px] sm:text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
               </div>
             </div>
           </div>
@@ -707,17 +727,17 @@ export default function LandingPage() {
 
       {/* FOOTER */}
       <footer className="w-full bg-[#f1f4f7] border-t border-slate-200">
-        <div className="max-w-[1280px] mx-auto px-5 md:px-12 py-10">
-          <div className="grid grid-cols-1 md:grid-cols-6 gap-8 pb-10">
-            <div className="md:col-span-2">
+        <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12 py-8 sm:py-10">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 sm:gap-8 pb-8 sm:pb-10">
+            <div className="col-span-2 sm:col-span-3 md:col-span-2">
               <div className="flex items-center gap-2 mb-3">
                 <Image src="/logo.png" alt="PocketBank Logo" width={32} height={32} className="object-contain" />
                 <span className="font-bold text-lg text-[#0a2540]">Pocket<span className="text-[#0d9488]">Bank</span></span>
               </div>
-              <p className="text-sm text-[#4a5568] max-w-xs">Engineered for sovereign liquidity and modern digital capital. Secure institutional vaults, high-frequency yield, and uncompromised privacy.</p>
-              <div className="flex gap-2 mt-4">
+              <p className="text-xs sm:text-sm text-[#4a5568] max-w-xs">Engineered for sovereign liquidity and modern digital capital. Secure institutional vaults, high-frequency yield, and uncompromised privacy.</p>
+              <div className="flex flex-wrap gap-2 mt-4">
                 {[{ icon: 'verified_user', label: 'SOC-2 TYPE II', color: 'text-teal-700', bg: 'bg-teal-50 border-teal-100' }, { icon: 'lock', label: '256-BIT AES', color: 'text-sky-700', bg: 'bg-sky-50 border-sky-100' }].map((b, i) => (
-                  <span key={i} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border ${b.color} ${b.bg}`}>
+                  <span key={i} className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] sm:text-[11px] font-semibold border ${b.color} ${b.bg}`}>
                     <span className={`material-symbols-outlined icon-sm ${b.color}`}>{b.icon}</span>{b.label}
                   </span>
                 ))}
@@ -729,22 +749,22 @@ export default function LandingPage() {
               { heading: 'Platform', links: ['Client Testimonials', 'Global Ticker', 'Press Coverage', 'System Status'] },
               { heading: 'Regulatory', links: ['Privacy Architecture', 'Client Agreement', 'Risk Disclosures', 'FDIC Pass-Through'] },
             ].map((col) => (
-              <div key={col.heading}>
-                <p className="text-[11px] font-bold uppercase tracking-wider text-[#0a2540] mb-3">{col.heading}</p>
-                <ul className="space-y-2 list-none p-0 m-0">
+              <div key={col.heading} className="col-span-1">
+                <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#0a2540] mb-2 sm:mb-3">{col.heading}</p>
+                <ul className="space-y-1.5 sm:space-y-2 list-none p-0 m-0">
                   {col.links.map((link) => (
-                    <li key={link}><a href="#" className="pb-footlink text-sm text-[#4a5568] no-underline transition-colors">{link}</a></li>
+                    <li key={link}><a href="#" className="pb-footlink text-xs sm:text-sm text-[#4a5568] no-underline transition-colors">{link}</a></li>
                   ))}
                 </ul>
               </div>
             ))}
           </div>
-          <div className="pt-6 border-t border-slate-200 flex flex-col md:flex-row items-center justify-between gap-3">
+          <div className="pt-6 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
             <div className="flex items-center gap-2">
               <span className="pb-glow w-2 h-2 rounded-full bg-teal-500 inline-block" />
-              <span className="font-mono text-xs text-[#4a5568]">POCKET-NET V4.89 ACTIVE</span>
+              <span className="font-mono text-[11px] sm:text-xs text-[#4a5568]">POCKET-NET V4.89 ACTIVE</span>
             </div>
-            <p className="text-xs text-[#74777e] text-center">© 2025 PocketBank Technologies AG. Sovereign institutional banking infrastructure. All rights reserved.</p>
+            <p className="text-[11px] sm:text-xs text-[#74777e]">© 2025 PocketBank Technologies AG. Sovereign institutional banking infrastructure. All rights reserved.</p>
           </div>
         </div>
       </footer>

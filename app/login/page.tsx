@@ -33,7 +33,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-[#f7fafd] relative overflow-hidden font-sans">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 sm:p-6 bg-[#f7fafd] relative overflow-hidden font-sans">
       {/* Ambient background glows */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none -z-10">
         <div className="absolute top-[-10%] left-[-5%] w-[40%] h-[50%] bg-[#57fae9]/10 rounded-full blur-[100px]" />
@@ -53,23 +53,23 @@ export default function LoginPage() {
         </div>
 
         {/* Header logo */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-block no-underline group">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mb-3 shadow-md group-hover:scale-105 transition-transform p-2">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-12 h-12 object-contain" />
+            <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-slate-200/80 mb-3 shadow-md group-hover:scale-105 transition-transform p-2">
+              <img src="/logo.png" alt="PocketBank Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
             </div>
-            <h1 className="font-headline-lg text-3xl font-bold text-[#000f22] mb-1">
+            <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold text-[#000f22] mb-1">
               Pocket<span className="text-[#0d9488]">Bank</span>
             </h1>
           </Link>
-          <p className="text-[#43474d] text-sm font-medium">Student Fintech Platform</p>
+          <p className="text-[#43474d] text-xs sm:text-sm font-medium">Student Fintech Platform</p>
         </div>
 
         {/* Login Step */}
         {step === 'LOGIN' ? (
-          <div className="bg-white rounded-2xl shadow-xl border border-[#c4c6ce]/30 p-8">
-            <h2 className="font-title-md text-xl font-bold text-[#000f22] mb-6">Welcome back</h2>
-            <form onSubmit={handleLoginSubmit} className="space-y-5">
+          <div className="bg-white rounded-2xl shadow-xl border border-[#c4c6ce]/30 p-5 sm:p-8">
+            <h2 className="font-title-md text-lg sm:text-xl font-bold text-[#000f22] mb-5 sm:mb-6">Welcome back</h2>
+            <form onSubmit={handleLoginSubmit} className="space-y-4 sm:space-y-5">
               <div>
                 <label className="block font-mono text-xs text-[#43474d] mb-2 font-semibold tracking-wider">
                   USERNAME OR STUDENT ID
@@ -113,9 +113,9 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#74777e] hover:text-[#000f22]"
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#74777e] hover:text-[#000f22] transition-colors"
                   >
-                    <span className="material-symbols-outlined text-xl">
+                    <span className="material-symbols-outlined text-lg">
                       {showPassword ? 'visibility_off' : 'visibility'}
                     </span>
                   </button>
@@ -142,20 +142,20 @@ export default function LoginPage() {
           </div>
         ) : (
           /* 2FA OTP Step */
-          <div className="bg-white rounded-2xl shadow-xl border border-[#c4c6ce]/30 p-8">
+          <div className="bg-white rounded-2xl shadow-xl border border-[#c4c6ce]/30 p-5 sm:p-8">
             <button
               onClick={() => setStep('LOGIN')}
               className="flex items-center gap-1 text-xs text-[#74777e] hover:text-[#000f22] mb-4 font-mono"
             >
               <span className="material-symbols-outlined text-sm">arrow_back</span> Back
             </button>
-            <h2 className="font-title-md text-xl font-bold text-[#000f22] mb-1">Verify Security Code</h2>
+            <h2 className="font-title-md text-lg sm:text-xl font-bold text-[#000f22] mb-1">Verify Security Code</h2>
             <p className="text-xs text-[#43474d] mb-6">
               Enter the 6-digit OTP sent to your registered student phone.
             </p>
 
             <form onSubmit={handleOtpSubmit} className="space-y-6">
-              <div className="flex justify-between gap-2">
+              <div className="flex justify-between gap-1.5 sm:gap-2">
                 {otp.map((digit, idx) => (
                   <input
                     key={idx}
@@ -167,7 +167,7 @@ export default function LoginPage() {
                       newOtp[idx] = e.target.value;
                       setOtp(newOtp);
                     }}
-                    className="w-12 h-12 text-center text-lg font-bold font-mono border-2 border-[#c4c6ce] focus:border-[#007168] rounded-xl outline-none bg-[#f1f4f7]"
+                    className="flex-1 min-w-[36px] max-w-[50px] h-11 sm:h-12 text-center text-base sm:text-lg font-bold font-mono border-2 border-[#c4c6ce] focus:border-[#007168] rounded-lg sm:rounded-xl outline-none bg-[#f1f4f7]"
                   />
                 ))}
               </div>

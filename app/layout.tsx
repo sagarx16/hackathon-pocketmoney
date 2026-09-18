@@ -40,7 +40,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-[#f7fafd] text-[#181c1e] antialiased selection:bg-[#57fae9] selection:text-[#007168]">
-        <ClerkProvider>
+        <ClerkProvider
+          appearance={{
+            options: {
+              unsafe_disableDevelopmentModeWarnings: true,
+            },
+          }}
+        >
           <BankProvider>
           <MainLayout>{children}</MainLayout>
           </BankProvider>

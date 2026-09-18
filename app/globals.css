@@ -168,3 +168,15 @@ html, body {
   font-weight: 700;
   line-height: 44px;
 }
+
+/* Hide Clerk Development Mode badge & watermark */
+.cl-development-badge,
+.cl-dev-mode,
+[data-localization-key="developmentMode"],
+[class*="developmentMode"],
+[class*="development-mode"],
+[class*="cl-development"],
+.cl-internal-development-badge {
+  display: none !important;
+}
+

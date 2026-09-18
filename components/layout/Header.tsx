@@ -4,13 +4,20 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import Link from 'next/link';
-import { UserButton, Show } from '@clerk/nextjs';
+import { UserButton, Show, useClerk } from '@clerk/nextjs';
 
 export const Header: React.FC = () => {
   const router = useRouter();
+  const { signOut } = useClerk();
   const { userProfile, isParentView, addToast, logout } = useBank();
   const [showNotifications, setShowNotifications] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const handleLogout = async () => {
+    logout();
+    addToast('Logged out successfully. You have been signed out.', 'info');
+    await signOut({ redirectUrl: '/' });
+  };
 
   const notifications = [
     { id: 1, title: 'Chore Reward Paid', desc: '₹2,000 added for Straight As Midterm', time: '10m ago', icon: 'emoji_events' },
@@ -83,37 +90,44 @@ export const Header: React.FC = () => {
 
         {/* Logout */}
         <button
-          onClick={() => {
-            logout();
-            addToast('Logged out successfully. You have been signed out.', 'info');
-            router.push('/');
-          }}
-          className="flex items-center gap-2 rounded-full border border-[#c4c6ce] bg-white px-3 py-2 text-xs font-bold font-mono text-[#000f22] hover:bg-[#f1f4f7] transition-colors"
+          onClick={handleLogout}
+          className="flex items-center gap-2 rounded-full border border-[#c4c6ce] bg-white px-3 py-2 text-xs font-bold font-mono text-[#000f22] hover:bg-[#f1f4f7] transition-colors cursor-pointer"
           aria-label="Logout"
         >
           <span className="material-symbols-outlined icon-md">logout</span>
           <span className="hidden lg:inline">Logout</span>
         </button>
 
-        {/* Clerk Auth User Button */}
-        <Show when="signed-in">
-          <div className="flex items-center">
-            <UserButton />
-          </div>
-        </Show>
+        {/* Unified Authenticated Profile */}
+        <div className="flex items-center gap-2.5 pl-3 border-l border-[#c4c6ce]/50">
+          <Show when="signed-in">
+            <UserButton
+              appearance={{
+                elements: {
+                  userButtonAvatarBox: 'w-9 h-9 ring-2 ring-[#006a62] shadow-xs hover:scale-105 transition-transform',
+                  userButtonPopoverCard: 'shadow-2xl border border-slate-200 rounded-2xl',
+                },
+              }}
+            />
+          </Show>
+          <Show when="signed-out">
+            <Link
+              href="/profile"
+              className="w-9 h-9 rounded-full bg-[#0a2540] text-[#57fae9] flex items-center justify-center font-bold text-xs shadow-xs ring-2 ring-[#006a62]"
+            >
+              {userProfile.name.charAt(0)}
+            </Link>
+          </Show>
 
-        {/* User Profile */}
-        <Link href="/profile" className="flex items-center gap-3 hover:opacity-85 transition-opacity">
-          <img
-            src={userProfile.avatar}
-            alt={userProfile.name}
-            className="w-9 h-9 rounded-full object-cover ring-2 ring-[#006a62]"
-          />
-          <div className="text-left hidden lg:block">
-            <p className="text-xs font-bold text-[#000f22] leading-tight">{userProfile.name}</p>
-            <p className="text-[11px] font-mono text-[#74777e]">{userProfile.studentId}</p>
-          </div>
-        </Link>
+          <Link href="/profile" className="text-left hidden lg:block no-underline group hover:opacity-85 transition-opacity">
+            <p className="text-xs font-bold text-[#000f22] group-hover:text-teal-700 transition-colors leading-tight">
+              {userProfile.name}
+            </p>
+            <p className="text-[11px] font-mono text-[#74777e] leading-tight mt-0.5">
+              {userProfile.studentId}
+            </p>
+          </Link>
+        </div>
       </div>
     </header>
   );

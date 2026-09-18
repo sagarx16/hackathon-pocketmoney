@@ -2,12 +2,15 @@
 
 import React, { useState } from 'react';
 import { useBank } from '@/context/BankContext';
+import { useUser, useClerk } from '@clerk/nextjs';
 
 const fmt = (n: number) =>
   '₹' + n.toLocaleString('en-IN', { maximumFractionDigits: 0 });
 
 export default function ProfilePage() {
   const { userProfile, accounts, transactions, chores, addToast, isParentView } = useBank();
+  const { isSignedIn } = useUser();
+  const { openUserProfile } = useClerk();
 
   const [editOpen, setEditOpen] = useState(false);
   const [editName, setEditName] = useState(userProfile.name);
@@ -80,11 +83,11 @@ export default function ProfilePage() {
               </div>
 
               <button
-                onClick={() => setEditOpen(true)}
-                className="mt-4 w-full py-2.5 rounded-xl border border-[#c4c6ce] text-sm font-semibold text-[#000f22] hover:bg-[#f1f4f7] transition-colors flex items-center justify-center gap-2"
+                onClick={() => (isSignedIn ? openUserProfile() : setEditOpen(true))}
+                className="mt-4 w-full py-2.5 rounded-xl border border-[#c4c6ce] text-sm font-semibold text-[#000f22] hover:bg-[#f1f4f7] transition-colors flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span className="material-symbols-outlined icon-sm">edit</span>
-                Edit Profile
+                <span className="material-symbols-outlined icon-sm">manage_accounts</span>
+                {isSignedIn ? 'Manage Clerk Account' : 'Edit Profile'}
               </button>
             </div>
           </div>

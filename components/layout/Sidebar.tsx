@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
-import { UserButton, Show } from '@clerk/nextjs';
+import { UserButton, Show, useClerk } from '@clerk/nextjs';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
@@ -24,10 +24,12 @@ export const Sidebar: React.FC = () => {
     { label: 'Profile', href: '/profile', icon: 'person' },
   ];
 
-  const handleLogout = () => {
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
     setMobileOpen(false);
     logout();
-    router.push('/');
+    await signOut({ redirectUrl: '/' });
   };
 
   return (
@@ -61,12 +63,14 @@ export const Sidebar: React.FC = () => {
           <Show when="signed-in">
             <UserButton />
           </Show>
-          <Link
-            href="/profile"
-            className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white flex items-center justify-center text-xs font-bold shadow-xs ring-2 ring-white"
-          >
-            {userProfile?.name?.charAt(0) || 'S'}
-          </Link>
+          <Show when="signed-out">
+            <Link
+              href="/profile"
+              className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white flex items-center justify-center text-xs font-bold shadow-xs ring-2 ring-white"
+            >
+              {userProfile?.name?.charAt(0) || 'S'}
+            </Link>
+          </Show>
         </div>
       </div>
 
@@ -109,8 +113,8 @@ export const Sidebar: React.FC = () => {
           </button>
         </div>
 
-        {/* User Mini Profile in Sidebar (Mobile Friendly) */}
-        <div className="px-3 py-2.5 bg-slate-50 border border-slate-200/70 rounded-xl mb-1 flex items-center gap-3">
+        {/* User Mini Profile in Sidebar (Mobile Friendly Drawer Only) */}
+        <div className="md:hidden px-3 py-2.5 bg-slate-50 border border-slate-200/70 rounded-xl mb-1 flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-xs">
             {userProfile?.name?.charAt(0) || 'S'}
           </div>

@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
+import { useUser } from '@clerk/nextjs';
 
 export interface Transaction {
   id: string;
@@ -109,18 +110,23 @@ interface BankContextType {
 const BankContext = createContext<BankContextType | undefined>(undefined);
 
 export const BankProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { user } = useUser();
   const [isLoggedIn, setIsLoggedIn] = useState(true);
   const [isParentView, setIsParentView] = useState(false);
 
-  const [userProfile] = useState({
-    name: 'Sagar Pathak',
+  const clerkName = user?.fullName || (user?.firstName ? `${user.firstName} ${user.lastName || ''}`.trim() : null);
+  const clerkEmail = user?.primaryEmailAddress?.emailAddress;
+  const clerkAvatar = user?.imageUrl;
+
+  const userProfile = {
+    name: clerkName || 'Sagar Pathak',
     studentId: 'STU-2026-8942',
-    avatar: '/avatar.png',
-    email: 'sagarixa@gmail.com',
+    avatar: clerkAvatar || '/avatar.png',
+    email: clerkEmail || 'sagarixa@gmail.com',
     kycStatus: 'Verified Student',
     rewardPoints: 1450,
     parentName: 'Sandhya Devi',
-  });
+  };
 
   const [accounts, setAccounts] = useState<Account[]>([
     {

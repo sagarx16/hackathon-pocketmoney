@@ -3,7 +3,8 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { SignInButton, SignUpButton, Show, UserButton } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
+import { SignInButton, SignUpButton, Show, UserButton, useAuth } from '@clerk/nextjs';
 
 /* ─── Coverflow Carousel ─── */
 const coverCards = [
@@ -275,8 +276,16 @@ function SecurityToggle({ label, sub, icon, iconColor, defaultOn }: { label: str
 }
 
 export default function LandingPage() {
+  const router = useRouter();
+  const { isSignedIn, isLoaded } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [phone, setPhone] = useState('');
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace('/home');
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   return (
     <div className="bg-[#f7fafd] text-[#0a2540] min-h-screen" style={{ fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
@@ -335,7 +344,7 @@ export default function LandingPage() {
           {/* Right Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5">
             <Show when="signed-out">
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
                   className="hidden sm:inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors cursor-pointer"
@@ -343,7 +352,7 @@ export default function LandingPage() {
                   Sign In
                 </button>
               </SignInButton>
-              <SignUpButton mode="modal">
+              <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
                   className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer"
@@ -401,7 +410,7 @@ export default function LandingPage() {
             ))}
             <div className="pt-2 mt-1 border-t border-slate-100 flex items-center gap-2">
               <Show when="signed-out">
-                <SignInButton mode="modal">
+                <SignInButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                   <button
                     type="button"
                     onClick={() => setMobileOpen(false)}
@@ -410,7 +419,7 @@ export default function LandingPage() {
                     Sign In
                   </button>
                 </SignInButton>
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                   <button
                     type="button"
                     onClick={() => setMobileOpen(false)}
@@ -464,7 +473,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-4 sm:px-0">
               <Show when="signed-out">
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                   <button
                     type="button"
                     className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
@@ -761,7 +770,7 @@ export default function LandingPage() {
                       className="w-full pl-14 pr-4 py-3 sm:py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
                   </div>
                   <Show when="signed-out">
-                    <SignUpButton mode="modal">
+                    <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                       <button
                         type="button"
                         className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider whitespace-nowrap text-[#0a2540] text-center cursor-pointer"

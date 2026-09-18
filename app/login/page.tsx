@@ -1,13 +1,21 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
+import { useAuth } from '@clerk/nextjs';
 
 export default function LoginPage() {
   const router = useRouter();
   const { login, addToast } = useBank();
+  const { isSignedIn, isLoaded } = useAuth();
+
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      router.replace('/home');
+    }
+  }, [isLoaded, isSignedIn, router]);
 
   const [username, setUsername] = useState('sagar.pathak');
   const [password, setPassword] = useState('password123');

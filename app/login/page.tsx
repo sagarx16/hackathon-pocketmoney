@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 
@@ -28,7 +29,7 @@ export default function LoginPage() {
     e.preventDefault();
     login();
     addToast('🎉 Login successful! Welcome back, Sagar.', 'success');
-    router.push('/');
+    router.push('/home');
   };
 
   return (
@@ -40,12 +41,27 @@ export default function LoginPage() {
       </div>
 
       <div className="w-full max-w-[440px] z-10">
+        {/* Back Link */}
+        <div className="mb-4">
+          <Link
+            href="/"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#4a5568] hover:text-[#0a2540] transition-colors no-underline px-3 py-1.5 rounded-full hover:bg-slate-200/50"
+          >
+            <span className="material-symbols-outlined text-sm">arrow_back</span>
+            Back to PocketBank Landing
+          </Link>
+        </div>
+
         {/* Header logo */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-[#0a2540] text-[#57fae9] mb-4 shadow-lg ring-4 ring-[#57fae9]/20">
-            <span className="material-symbols-outlined text-4xl">account_balance</span>
-          </div>
-          <h1 className="font-headline-lg text-3xl font-bold text-[#000f22] mb-1">PocketBank</h1>
+          <Link href="/" className="inline-block no-underline group">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white border border-slate-200/80 mb-3 shadow-md group-hover:scale-105 transition-transform p-2">
+              <img src="/logo.png" alt="PocketBank Logo" className="w-12 h-12 object-contain" />
+            </div>
+            <h1 className="font-headline-lg text-3xl font-bold text-[#000f22] mb-1">
+              Pocket<span className="text-[#0d9488]">Bank</span>
+            </h1>
+          </Link>
           <p className="text-[#43474d] text-sm font-medium">Student Fintech Platform</p>
         </div>
 

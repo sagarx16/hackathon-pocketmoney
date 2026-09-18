@@ -11,7 +11,7 @@ export const Sidebar: React.FC = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const navItems = [
-    { label: 'Home', href: '/', icon: 'home' },
+    { label: 'Home', href: '/home', icon: 'home' },
     { label: 'Accounts', href: '/accounts', icon: 'account_balance' },
     { label: 'Transfers', href: '/transfers', icon: 'swap_horiz' },
     { label: 'Statements', href: '/statements', icon: 'description' },
@@ -26,11 +26,16 @@ export const Sidebar: React.FC = () => {
     <>
       {/* Mobile Top Bar */}
       <div className="md:hidden flex justify-between items-center w-full px-6 h-16 bg-[#f7fafd] border-b border-[#c4c6ce]/40 sticky top-0 z-40">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
           <button onClick={() => setMobileOpen(!mobileOpen)} className="text-[#000f22] p-1">
             <span className="material-symbols-outlined icon-lg">{mobileOpen ? 'close' : 'menu'}</span>
           </button>
-          <span className="font-headline-lg-mobile text-xl font-bold text-[#000f22]">PocketBank</span>
+          <div className="w-8 h-8 min-w-[32px] min-h-[32px] shrink-0 rounded-lg bg-white border border-[#c4c6ce]/40 p-0.5 flex items-center justify-center shadow-xs overflow-hidden">
+            <img src="/logo.png" alt="PocketBank Logo" className="w-6 h-6 object-contain shrink-0" />
+          </div>
+          <span className="font-extrabold text-lg text-[#0a2540] tracking-tight">
+            Pocket<span className="text-[#0d9488]">Bank</span>
+          </span>
         </div>
         <div className="flex items-center gap-2">
           <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-full bg-[#0a2540] text-[#57fae9]">
@@ -54,17 +59,19 @@ export const Sidebar: React.FC = () => {
         }`}
       >
         {/* Brand Header */}
-        <div className="flex items-center gap-3 px-4 pb-6 border-b border-[#c4c6ce]/30 mb-2">
-          <div className="w-10 h-10 rounded-xl bg-[#0a2540] text-[#57fae9] flex items-center justify-center font-bold shadow-sm">
-            <span className="material-symbols-outlined" data-icon="account_balance">account_balance</span>
+        <Link href="/home" className="flex items-center gap-3 px-4 pb-5 border-b border-[#c4c6ce]/30 mb-2 no-underline group">
+          <div className="w-10 h-10 min-w-[40px] min-h-[40px] shrink-0 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs overflow-hidden group-hover:scale-105 transition-transform">
+            <img src="/logo.png" alt="PocketBank Logo" className="w-8 h-8 object-contain shrink-0" />
           </div>
-          <div>
-            <h1 className="font-headline-lg text-lg font-bold text-[#000f22] leading-tight">PocketBank</h1>
-            <p className="font-label-sm text-xs text-[#43474d]">
-              {isParentView ? 'Parent Control View' : 'Student Edition'}
-            </p>
+          <div className="min-w-0 flex-1 flex flex-col justify-center">
+            <span className="text-[19px] font-extrabold tracking-tight text-[#0a2540] leading-none">
+              Pocket<span className="text-[#0d9488]">Bank</span>
+            </span>
+            <span className="text-[11px] font-medium text-[#74777e] tracking-wide mt-1.5 leading-none">
+              {isParentView ? 'Parent Control' : 'Student Edition'}
+            </span>
           </div>
-        </div>
+        </Link>
 
         {/* Links */}
         <div className="flex-1 space-y-1 overflow-y-auto pr-1">

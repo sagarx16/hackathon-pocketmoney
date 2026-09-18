@@ -9,10 +9,11 @@ import { ToastContainer } from '../ui/ToastContainer';
 export const MainLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const pathname = usePathname();
   const isLoginPage = pathname === '/login';
+  const isLandingPage = pathname === '/landing' || pathname === '/';
 
-  if (isLoginPage) {
+  if (isLoginPage || isLandingPage) {
     return (
-      <div className="min-h-screen bg-[#f7fafd] text-[#181c1e]">
+      <div className="min-h-screen">
         {children}
         <ToastContainer />
       </div>

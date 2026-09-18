@@ -85,7 +85,7 @@ export const Header: React.FC = () => {
           onClick={() => {
             logout();
             addToast('Logged out successfully. You have been signed out.', 'info');
-            router.push('/login');
+            router.push('/');
           }}
           className="flex items-center gap-2 rounded-full border border-[#c4c6ce] bg-white px-3 py-2 text-xs font-bold font-mono text-[#000f22] hover:bg-[#f1f4f7] transition-colors"
           aria-label="Logout"

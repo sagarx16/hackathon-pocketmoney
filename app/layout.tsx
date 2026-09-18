@@ -6,12 +6,24 @@ import { MainLayout } from '@/components/layout/MainLayout';
 export const metadata: Metadata = {
   title: 'PocketBank - Student Fintech Platform',
   description: 'A sophisticated, modern digital banking app for students, featuring smart savings, chore rewards, P2P payments, and parent controls.',
+  icons: {
+    icon: [
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/logo.png', type: 'image/png' },
+    ],
+    apple: '/apple-icon.png',
+    shortcut: '/favicon-32.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="light">
       <head>
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
         {/* Material Symbols — loaded via <link> for reliable rendering */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />

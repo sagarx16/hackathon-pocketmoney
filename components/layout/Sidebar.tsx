@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import { UserButton, Show, useClerk } from '@clerk/nextjs';
@@ -40,13 +41,13 @@ export const Sidebar: React.FC = () => {
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="text-[#000f22] p-1.5 -ml-1.5 rounded-lg hover:bg-black/5 active:scale-95 transition-all"
-            aria-label="Open menu"
+            aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
           >
             <span className="material-symbols-outlined icon-lg text-2xl">{mobileOpen ? 'close' : 'menu'}</span>
           </button>
           <Link href="/home" className="flex items-center gap-2.5">
             <div className="w-9 h-9 min-w-[36px] min-h-[36px] shrink-0 rounded-xl bg-white border border-[#c4c6ce]/40 p-1 flex items-center justify-center shadow-xs overflow-hidden">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-7 h-7 object-contain shrink-0" />
+              <Image src="/logo.webp" alt="PocketBank Logo" width={28} height={28} priority className="w-7 h-7 object-contain shrink-0" />
             </div>
             <span className="font-black text-xl sm:text-2xl text-[#0a2540] tracking-tight">
               Pocket<span className="text-[#0d9488]">Bank</span>
@@ -92,7 +93,7 @@ export const Sidebar: React.FC = () => {
         <div className="flex items-center justify-between px-2 pb-4 border-b border-[#c4c6ce]/30 mb-2">
           <Link href="/home" onClick={() => setMobileOpen(false)} className="flex flex-nowrap items-center gap-3 no-underline group flex-1 min-w-0 whitespace-nowrap">
             <div className="w-10 h-10 min-w-[40px] min-h-[40px] shrink-0 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs overflow-hidden group-hover:scale-105 transition-transform">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-8 h-8 object-contain shrink-0" />
+              <Image src="/logo.webp" alt="PocketBank Logo" width={32} height={32} priority className="w-8 h-8 object-contain shrink-0" />
             </div>
             <div className="min-w-0 flex flex-col justify-center whitespace-nowrap">
               <span className="text-[20px] font-black tracking-tight text-[#0a2540] leading-none whitespace-nowrap inline-block">

@@ -1,7 +1,6 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import confetti from 'canvas-confetti';
 import { useUser } from '@clerk/nextjs';
 
 export interface Transaction {
@@ -121,7 +120,7 @@ export const BankProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const userProfile = {
     name: clerkName || 'Sagar Pathak',
     studentId: 'STU-2026-8942',
-    avatar: clerkAvatar || '/avatar.png',
+    avatar: clerkAvatar || '/avatar.webp',
     email: clerkEmail || 'sagarixa@gmail.com',
     kycStatus: 'Verified Student',
     rewardPoints: 1450,
@@ -338,8 +337,10 @@ export const BankProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
-  const triggerConfetti = () => {
+  const triggerConfetti = async () => {
     try {
+      const confettiModule = await import('canvas-confetti');
+      const confetti = confettiModule.default;
       confetti({
         particleCount: 80,
         spread: 70,
@@ -347,7 +348,7 @@ export const BankProvider: React.FC<{ children: React.ReactNode }> = ({ children
         colors: ['#00d1c1', '#0a2540', '#ff6b6b', '#57fae9'],
       });
     } catch {
-      // fallback if canvas canvas-confetti fails
+      // fallback if canvas-confetti fails
     }
   };
 

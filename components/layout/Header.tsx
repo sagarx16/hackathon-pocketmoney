@@ -58,6 +58,8 @@ export const Header: React.FC = () => {
         <div className="relative">
           <button
             onClick={() => setShowNotifications(!showNotifications)}
+            aria-label="View notifications"
+            aria-expanded={showNotifications}
             className="p-2 rounded-full text-[#43474d] hover:bg-[#ebeef1] hover:text-[#000f22] transition-colors relative"
           >
             <span className="material-symbols-outlined icon-lg">notifications</span>

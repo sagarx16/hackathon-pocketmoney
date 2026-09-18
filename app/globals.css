@@ -1,9 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-inter: 'Inter', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-inter: var(--font-inter), 'Inter', sans-serif;
+  --font-mono: var(--font-mono), 'JetBrains Mono', monospace;
 
   /* Custom Color Tokens matching Kinetic Institutional Design System */
   --color-background: #f7fafd;
@@ -179,4 +178,17 @@ html, body {
 .cl-internal-development-badge {
   display: none !important;
 }
+
+/* Accessibility: WCAG AA Compliant Focus Indicators */
+:focus-visible {
+  outline: 2px solid #006a62 !important;
+  outline-offset: 2px !important;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible) {
+  outline: none;
+}
+
 

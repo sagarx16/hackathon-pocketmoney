@@ -27,7 +27,7 @@ export default function AccountsPage() {
       {/* Page Title */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="font-headline-lg text-2xl md:text-3xl font-bold text-f[#000f22]">
+          <h1 className="font-headline-lg text-2xl md:text-3xl font-bold text-[#000f22]">
             Accounts & Vaults
           </h1>
           <p className="text-sm text-[#43474d]">

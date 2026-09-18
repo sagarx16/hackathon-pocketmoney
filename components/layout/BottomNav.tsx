@@ -24,6 +24,7 @@ export const BottomNav: React.FC<{ onOpenMenu?: () => void }> = ({ onOpenMenu })
             <Link
               key={item.href}
               href={item.href}
+              aria-current={isActive ? 'page' : undefined}
               className={`flex flex-col items-center justify-center py-1.5 px-3 rounded-xl transition-all duration-200 no-underline min-w-[56px] ${
                 isActive
                   ? 'text-[#007168]'

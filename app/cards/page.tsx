@@ -101,7 +101,19 @@ export default function CardsPage() {
           </div>
 
           {/* 3D Flip Card Container */}
-          <div className="relative group cursor-pointer" onClick={() => setIsFlipped(!isFlipped)}>
+          <div
+            className="relative group cursor-pointer"
+            onClick={() => setIsFlipped(!isFlipped)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setIsFlipped(!isFlipped);
+              }
+            }}
+            tabIndex={0}
+            role="button"
+            aria-label="Student debit card. Press Enter or Space to flip card and view CVV security code"
+          >
             <div
               className={`w-full aspect-[1.58/1] rounded-3xl bg-gradient-to-br ${currentCard.colorGradient} p-8 text-white shadow-2xl relative flex flex-col justify-between transition-transform duration-500 transform-gpu ${
                 isFlipped ? 'rotate-y-180' : ''
@@ -198,6 +210,7 @@ export default function CardsPage() {
               step="1000"
               value={sliderValue}
               onChange={handleSliderChange}
+              aria-label="Daily Transaction Limit"
               className="w-full accent-[#006a62] cursor-pointer"
             />
             <div className="flex justify-between text-[10px] font-mono text-[#74777e]">
@@ -238,7 +251,7 @@ export default function CardsPage() {
           <div className="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-[#c4c6ce]/40">
             <div className="flex justify-between items-center pb-4 border-b border-[#c4c6ce]/30 mb-4">
               <h3 className="font-title-md text-base font-bold text-[#000f22]">Reset Card PIN</h3>
-              <button onClick={() => setShowPinModal(false)} className="text-[#74777e]">
+              <button onClick={() => setShowPinModal(false)} aria-label="Close PIN modal" className="text-[#74777e] hover:text-[#000f22] p-1 rounded-lg">
                 <span className="material-symbols-outlined">close</span>
               </button>
             </div>

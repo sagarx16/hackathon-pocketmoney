@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useBank } from '@/context/BankContext';
 import { useUser, useClerk } from '@clerk/nextjs';
 
@@ -60,13 +61,16 @@ export default function ProfilePage() {
 
             <div className="px-6 pb-6 -mt-10 flex flex-col items-center text-center">
               <div className="relative">
-                <img
+                <Image
                   src={userProfile.avatar}
                   alt={userProfile.name}
+                  width={80}
+                  height={80}
                   className="w-20 h-20 rounded-full object-cover ring-4 ring-white shadow-lg"
                 />
                 <button
                   onClick={() => addToast('Photo upload coming soon!', 'info')}
+                  aria-label="Upload profile photo"
                   className="absolute bottom-0 right-0 w-7 h-7 rounded-full bg-[#006a62] text-white flex items-center justify-center shadow-md hover:bg-[#007168] transition-colors"
                 >
                   <span className="material-symbols-outlined icon-sm">photo_camera</span>

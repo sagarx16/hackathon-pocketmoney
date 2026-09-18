@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import { useAuth } from '@clerk/nextjs';
@@ -64,7 +65,7 @@ export default function LoginPage() {
         <div className="text-center mb-6 sm:mb-8">
           <Link href="/" className="inline-block no-underline group">
             <div className="inline-flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white border border-slate-200/80 mb-3 shadow-md group-hover:scale-105 transition-transform p-2">
-              <img src="/logo.png" alt="PocketBank Logo" className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
+              <Image src="/logo.webp" alt="PocketBank Logo" width={48} height={48} priority className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
             </div>
             <h1 className="font-headline-lg text-2xl sm:text-3xl font-bold text-[#000f22] mb-1">
               Pocket<span className="text-[#0d9488]">Bank</span>

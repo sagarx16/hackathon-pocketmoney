@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { useBank } from '@/context/BankContext';
 
 export default function TransfersPage() {
-  const { accounts, sendMoney, requestMoney, userProfile } = useBank();
+  const { accounts, sendMoney, requestMoney, userProfile, addToast } = useBank();
 
   const [activeTab, setActiveTab] = useState<'SEND' | 'REQUEST'>('SEND');
   const [recipient, setRecipient] = useState('');
@@ -21,9 +22,29 @@ export default function TransfersPage() {
 
   const handleSend = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanRecipient = recipient.trim().replace(/[<>]/g, '');
+    const cleanNote = note.trim().slice(0, 100).replace(/[<>]/g, '');
     const amt = parseFloat(amount);
-    if (!recipient || isNaN(amt) || amt <= 0) return;
-    const success = sendMoney(recipient, amt, selectedAcc, note);
+
+    if (!cleanRecipient) {
+      addToast('Please specify a recipient UPI ID or account.', 'error');
+      return;
+    }
+    if (isNaN(amt) || amt <= 0) {
+      addToast('Please enter a valid transfer amount greater than ₹0.', 'error');
+      return;
+    }
+    if (amt > 100000) {
+      addToast('Maximum per-transaction transfer limit is ₹1,00,000.', 'error');
+      return;
+    }
+    const parts = amount.split('.');
+    if (parts[1] && parts[1].length > 2) {
+      addToast('Amount cannot exceed 2 decimal places.', 'error');
+      return;
+    }
+
+    const success = sendMoney(cleanRecipient, amt, selectedAcc, cleanNote);
     if (success) {
       setRecipient('');
       setAmount('');
@@ -33,9 +54,24 @@ export default function TransfersPage() {
 
   const handleRequest = (e: React.FormEvent) => {
     e.preventDefault();
+    const cleanRecipient = recipient.trim().replace(/[<>]/g, '');
+    const cleanNote = (note || 'Allowance Request').trim().slice(0, 100).replace(/[<>]/g, '');
     const amt = parseFloat(amount);
-    if (!recipient || isNaN(amt) || amt <= 0) return;
-    requestMoney(recipient, amt, note || 'Allowance Request');
+
+    if (!cleanRecipient) {
+      addToast('Please specify who to request funds from.', 'error');
+      return;
+    }
+    if (isNaN(amt) || amt <= 0) {
+      addToast('Please enter a valid request amount greater than ₹0.', 'error');
+      return;
+    }
+    if (amt > 100000) {
+      addToast('Maximum request limit is ₹1,00,000.', 'error');
+      return;
+    }
+
+    requestMoney(cleanRecipient, amt, cleanNote);
     setRecipient('');
     setAmount('');
     setNote('');
@@ -63,7 +99,7 @@ export default function TransfersPage() {
               onClick={() => setRecipient(c.name)}
               className="flex items-center gap-3 p-3 rounded-xl bg-[#f7fafd] hover:bg-[#57fae9]/20 border border-[#c4c6ce]/30 transition-all shrink-0 text-left cursor-pointer group"
             >
-              <img src={c.avatar} alt={c.name} className="w-10 h-10 rounded-full object-cover" />
+              <Image src={c.avatar} alt={c.name} width={40} height={40} className="w-10 h-10 rounded-full object-cover shrink-0" />
               <div>
                 <p className="text-xs font-bold text-[#000f22] group-hover:text-[#007168]">{c.name}</p>
                 <p className="text-[10px] font-mono text-[#74777e]">{c.role}</p>
@@ -141,6 +177,10 @@ export default function TransfersPage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   placeholder="e.g. 1500"
+                  min="1"
+                  max="100000"
+                  step="0.01"
+                  inputMode="decimal"
                   className="w-full border border-[#c4c6ce] rounded-xl px-4 py-3 text-sm font-mono outline-none focus:border-[#000f22]"
                   required
                 />
@@ -155,6 +195,7 @@ export default function TransfersPage() {
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
                   placeholder="e.g. Lab Manual & Printing Fees"
+                  maxLength={100}
                   className="w-full border border-[#c4c6ce] rounded-xl px-4 py-3 text-sm outline-none focus:border-[#000f22]"
                 />
               </div>

@@ -697,7 +697,7 @@ export default function LandingPage() {
                     <p className="text-sm text-[#4a5568] leading-relaxed">{t.quote}</p>
                   </div>
                   <div className="flex items-center gap-3 pt-4 sm:pt-6 mt-6 border-t border-slate-100">
-                    <img src={t.avatar} alt={t.name} className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover shrink-0 border border-slate-200" />
+                    <Image src={t.avatar} alt={t.name} width={44} height={44} className="w-10 h-10 sm:w-11 sm:h-11 rounded-full object-cover shrink-0 border border-slate-200" />
                     <div>
                       <p className="text-xs font-bold text-[#0a2540]">{t.name}</p>
                       <p className="text-[11px] text-[#4a5568]">{t.role}</p>

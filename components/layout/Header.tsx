@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import Link from 'next/link';
+import { UserButton, Show } from '@clerk/nextjs';
 
 export const Header: React.FC = () => {
   const router = useRouter();
@@ -93,6 +94,13 @@ export const Header: React.FC = () => {
           <span className="material-symbols-outlined icon-md">logout</span>
           <span className="hidden lg:inline">Logout</span>
         </button>
+
+        {/* Clerk Auth User Button */}
+        <Show when="signed-in">
+          <div className="flex items-center">
+            <UserButton />
+          </div>
+        </Show>
 
         {/* User Profile */}
         <Link href="/profile" className="flex items-center gap-3 hover:opacity-85 transition-opacity">

@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { BankProvider } from '@/context/BankContext';
@@ -39,9 +40,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-[#f7fafd] text-[#181c1e] antialiased selection:bg-[#57fae9] selection:text-[#007168]">
-        <BankProvider>
+        <ClerkProvider>
+          <BankProvider>
           <MainLayout>{children}</MainLayout>
-        </BankProvider>
+          </BankProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

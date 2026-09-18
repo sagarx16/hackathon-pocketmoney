@@ -3,6 +3,7 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { SignInButton, SignUpButton, Show, UserButton } from '@clerk/nextjs';
 
 /* ─── Coverflow Carousel ─── */
 const coverCards = [
@@ -333,31 +334,42 @@ export default function LandingPage() {
 
           {/* Right Controls */}
           <div className="flex items-center gap-1.5 sm:gap-2.5">
-            <Link
-              href="/login"
-              className="hidden sm:inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors no-underline"
-            >
-              Sign In
-            </Link>
-            <Link
-              href="/login"
-              className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all"
-              style={{
-                background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
-              }}
-            >
-              <span>Open Account</span>
-              <span className="material-symbols-outlined text-xs sm:text-sm transition-transform duration-200 group-hover:translate-x-0.5">
-                arrow_forward
-              </span>
-            </Link>
-            <Link
-              href="/login"
-              title="Student Portal"
-              className="hidden sm:flex w-9 h-9 rounded-full bg-slate-100 hover:bg-teal-50 border border-slate-200 hover:border-teal-200 items-center justify-center text-[#0a2540] hover:text-teal-700 transition-all shadow-2xs no-underline"
-            >
-              <span className="material-symbols-outlined text-[18px]">person</span>
-            </Link>
+            <Show when="signed-out">
+              <SignInButton mode="modal">
+                <button
+                  type="button"
+                  className="hidden sm:inline-flex items-center px-3.5 py-2 rounded-full text-xs font-semibold text-[#0a2540] hover:text-[#0d9488] hover:bg-slate-100/80 transition-colors cursor-pointer"
+                >
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button
+                  type="button"
+                  className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer"
+                  style={{
+                    background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
+                  }}
+                >
+                  <span>Open Account</span>
+                  <span className="material-symbols-outlined text-xs sm:text-sm transition-transform duration-200 group-hover:translate-x-0.5">
+                    arrow_forward
+                  </span>
+                </button>
+              </SignUpButton>
+            </Show>
+
+            <Show when="signed-in">
+              <Link
+                href="/home"
+                className="inline-flex items-center gap-1 px-3.5 py-2 rounded-full text-xs font-bold text-[#007168] bg-[#57fae9]/40 hover:bg-[#57fae9] transition-all no-underline"
+              >
+                <span className="material-symbols-outlined text-sm">dashboard</span>
+                <span>Dashboard</span>
+              </Link>
+              <UserButton />
+            </Show>
+
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle navigation menu"
@@ -388,20 +400,36 @@ export default function LandingPage() {
               </a>
             ))}
             <div className="pt-2 mt-1 border-t border-slate-100 flex items-center gap-2">
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0a2540] no-underline hover:bg-slate-50"
-              >
-                Sign In
-              </Link>
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider no-underline shadow-sm"
-              >
-                Get Started
-              </Link>
+              <Show when="signed-out">
+                <SignInButton mode="modal">
+                  <button
+                    type="button"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 text-center py-2.5 rounded-xl border border-slate-200 text-xs font-semibold text-[#0a2540] hover:bg-slate-50 cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button
+                    type="button"
+                    onClick={() => setMobileOpen(false)}
+                    className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider shadow-sm cursor-pointer"
+                  >
+                    Get Started
+                  </button>
+                </SignUpButton>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  href="/home"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex-1 text-center py-2.5 rounded-xl bg-[#0a2540] text-white text-xs font-bold uppercase tracking-wider no-underline shadow-sm"
+                >
+                  Go to Dashboard
+                </Link>
+                <UserButton />
+              </Show>
             </div>
           </div>
         )}
@@ -435,10 +463,28 @@ export default function LandingPage() {
             </p>
 
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto px-4 sm:px-0">
-              <Link href="/login" className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline" style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}>
-                <span>Open an Account</span>
-                <span className="material-symbols-outlined icon-sm">arrow_forward</span>
-              </Link>
+              <Show when="signed-out">
+                <SignUpButton mode="modal">
+                  <button
+                    type="button"
+                    className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white cursor-pointer"
+                    style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}
+                  >
+                    <span>Open an Account</span>
+                    <span className="material-symbols-outlined icon-sm">arrow_forward</span>
+                  </button>
+                </SignUpButton>
+              </Show>
+              <Show when="signed-in">
+                <Link
+                  href="/home"
+                  className="pb-cta w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-white no-underline"
+                  style={{ background: '#0a2540', boxShadow: '0 4px 18px rgba(10,37,64,0.22)' }}
+                >
+                  <span>Go to Dashboard</span>
+                  <span className="material-symbols-outlined icon-sm">arrow_forward</span>
+                </Link>
+              </Show>
               <a href="#how-it-works" className="w-full sm:w-auto justify-center inline-flex items-center gap-2 px-7 py-3 sm:py-3.5 rounded-full text-xs font-semibold uppercase tracking-wider text-[#0a2540] bg-white border border-slate-200 hover:bg-slate-50 shadow-sm no-underline transition-all">
                 <span className="material-symbols-outlined text-[#0d9488] icon-sm">play_circle</span>
                 <span>See How It Works</span>
@@ -714,9 +760,26 @@ export default function LandingPage() {
                     <input type="tel" maxLength={10} value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="Enter Mobile Number"
                       className="w-full pl-14 pr-4 py-3 sm:py-3.5 rounded-full bg-white/10 text-white font-mono text-sm placeholder:text-white/40 outline-none border border-white/20 focus:border-teal-300 focus:ring-2 focus:ring-teal-400/30 transition-all" />
                   </div>
-                  <Link href="/login" className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540] text-center" style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}>
-                    Claim Card
-                  </Link>
+                  <Show when="signed-out">
+                    <SignUpButton mode="modal">
+                      <button
+                        type="button"
+                        className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider whitespace-nowrap text-[#0a2540] text-center cursor-pointer"
+                        style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}
+                      >
+                        Claim Card
+                      </button>
+                    </SignUpButton>
+                  </Show>
+                  <Show when="signed-in">
+                    <Link
+                      href="/home"
+                      className="pb-cta w-full sm:w-auto shrink-0 px-8 py-3 sm:py-3.5 rounded-full font-semibold text-xs uppercase tracking-wider no-underline whitespace-nowrap text-[#0a2540] text-center"
+                      style={{ background: '#ffffff', boxShadow: '0 4px 18px rgba(255,255,255,0.25)', display: 'inline-block' }}
+                    >
+                      Go to Dashboard
+                    </Link>
+                  </Show>
                 </div>
                 <p className="text-[10px] sm:text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
               </div>

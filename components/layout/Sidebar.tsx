@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
+import { UserButton, Show } from '@clerk/nextjs';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
@@ -57,6 +58,9 @@ export const Sidebar: React.FC = () => {
           >
             {isParentView ? 'PARENT' : 'STUDENT'}
           </button>
+          <Show when="signed-in">
+            <UserButton />
+          </Show>
           <Link
             href="/profile"
             className="w-8 h-8 rounded-full bg-gradient-to-tr from-teal-500 to-emerald-400 text-white flex items-center justify-center text-xs font-bold shadow-xs ring-2 ring-white"

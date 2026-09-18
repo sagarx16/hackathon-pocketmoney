@@ -33,9 +33,9 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="hidden md:flex justify-between items-center w-full px-8 h-16 bg-[#f7fafd] border-b border-[#c4c6ce]/30 sticky top-0 z-30">
+    <header className="hidden md:flex flex-nowrap justify-between items-center w-full px-6 lg:px-8 h-16 bg-[#f7fafd] border-b border-[#c4c6ce]/30 sticky top-0 z-30 whitespace-nowrap">
       {/* Search Input */}
-      <form onSubmit={handleSearch} className="flex items-center gap-3 bg-[#ffffff] rounded-full px-4 py-2 border border-[#c4c6ce] focus-within:border-[#000f22] transition-colors w-96 shadow-xs">
+      <form onSubmit={handleSearch} className="flex items-center gap-3 bg-[#ffffff] rounded-full px-4 py-2 border border-[#c4c6ce] focus-within:border-[#000f22] transition-colors w-72 lg:w-96 shadow-xs shrink-0">
         <span className="material-symbols-outlined icon-md text-[#74777e]">search</span>
         <input
           type="text"
@@ -47,7 +47,7 @@ export const Header: React.FC = () => {
       </form>
 
       {/* Right Controls */}
-      <div className="flex items-center gap-5">
+      <div className="flex flex-nowrap items-center gap-3.5 lg:gap-4 shrink-0 whitespace-nowrap">
         {/* Role Pill */}
         <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-[#ebeef1] border border-[#c4c6ce]/50 text-xs font-mono text-[#000f22]">
           <span className="w-2 h-2 rounded-full bg-[#006a62] animate-pulse"></span>

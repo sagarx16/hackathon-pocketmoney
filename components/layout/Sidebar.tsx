@@ -90,15 +90,15 @@ export const Sidebar: React.FC = () => {
       >
         {/* Brand Header + Mobile Close */}
         <div className="flex items-center justify-between px-2 pb-4 border-b border-[#c4c6ce]/30 mb-2">
-          <Link href="/home" onClick={() => setMobileOpen(false)} className="flex items-center gap-3 no-underline group flex-1">
+          <Link href="/home" onClick={() => setMobileOpen(false)} className="flex flex-nowrap items-center gap-3 no-underline group flex-1 min-w-0 whitespace-nowrap">
             <div className="w-10 h-10 min-w-[40px] min-h-[40px] shrink-0 rounded-xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs overflow-hidden group-hover:scale-105 transition-transform">
               <img src="/logo.png" alt="PocketBank Logo" className="w-8 h-8 object-contain shrink-0" />
             </div>
-            <div className="min-w-0 flex flex-col justify-center">
-              <span className="text-[22px] sm:text-[23px] font-black tracking-tight text-[#0a2540] leading-none">
+            <div className="min-w-0 flex flex-col justify-center whitespace-nowrap">
+              <span className="text-[20px] font-black tracking-tight text-[#0a2540] leading-none whitespace-nowrap inline-block">
                 Pocket<span className="text-[#0d9488]">Bank</span>
               </span>
-              <span className="text-[11px] font-bold text-[#74777e] tracking-wide mt-1 leading-none">
+              <span className="text-[10.5px] font-bold text-[#74777e] tracking-wide mt-1 leading-none whitespace-nowrap">
                 {isParentView ? 'Parent Control' : 'Student Edition'}
               </span>
             </div>

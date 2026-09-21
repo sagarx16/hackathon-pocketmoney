@@ -356,7 +356,7 @@ export default function LandingPage() {
               <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
-                  className="pb-cta hidden min-[421px]:inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  className="pb-cta hidden min-[501px]:inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer whitespace-nowrap shrink-0"
                   style={{
                     background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
                   }}

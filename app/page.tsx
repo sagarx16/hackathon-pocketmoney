@@ -446,7 +446,7 @@ export default function LandingPage() {
       </header>
 
       {/* MAIN */}
-      <main className="pt-[86px] sm:pt-[118px] relative overflow-hidden">
+      <main className="pt-[76px] sm:pt-[108px] relative overflow-hidden">
         {/* Ambient glows */}
         <div className="pointer-events-none absolute top-10 left-1/2 -translate-x-1/2 w-[850px] h-[450px] rounded-full" style={{ background: 'linear-gradient(135deg, rgba(186,230,253,0.5), rgba(204,251,241,0.6), rgba(199,210,254,0.4))', filter: 'blur(120px)' }} />
         <div className="pointer-events-none absolute top-[1400px] -left-48 w-[600px] h-[600px] rounded-full" style={{ background: 'rgba(204,251,241,0.35)', filter: 'blur(140px)' }} />

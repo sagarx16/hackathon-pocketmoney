@@ -304,16 +304,16 @@ export default function LandingPage() {
       `}</style>
 
       {/* HEADER */}
-      <header className="fixed top-2 sm:top-5 left-0 right-0 z-50 px-3 sm:px-6 md:px-8 max-w-[1240px] mx-auto transition-all duration-300">
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-[0_8px_30px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-2xl md:rounded-full px-3.5 sm:px-5 py-2 sm:py-2.5 flex flex-nowrap items-center justify-between gap-2 sm:gap-4 whitespace-nowrap">
+      <header className="fixed top-2 sm:top-5 left-0 right-0 z-50 px-3.5 sm:px-6 md:px-8 max-w-[1240px] mx-auto transition-all duration-300">
+        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-[0_8px_30px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-full px-4 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4">
 
           {/* Brand */}
-          <a href="#" className="flex flex-nowrap items-center gap-2 sm:gap-2.5 no-underline group shrink-0 whitespace-nowrap">
+          <a href="#" className="flex items-center gap-2 sm:gap-2.5 no-underline group shrink-0">
             <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden bg-white shadow-xs border border-slate-200/80 p-0.5 flex items-center justify-center transition-all duration-300 group-hover:scale-105 shrink-0">
               <Image src="/logo.png" alt="PocketBank Logo" width={36} height={36} className="object-contain" priority />
             </div>
             <div className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className="font-black text-xl sm:text-[22px] text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors whitespace-nowrap inline-block">
+              <span className="font-black text-lg sm:text-[22px] text-[#0a2540] tracking-tight group-hover:text-teal-900 transition-colors inline-block">
                 Pocket<span className="text-[#0d9488]">Bank</span>
               </span>
               <span className="hidden xl:inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10.5px] font-extrabold tracking-wider uppercase bg-teal-50 text-teal-700 border border-teal-200/60 whitespace-nowrap">
@@ -324,7 +324,7 @@ export default function LandingPage() {
           </a>
 
           {/* Navigation Links */}
-          <nav className="pb-nav hidden lg:flex flex-nowrap items-center gap-1 bg-slate-50/90 p-1 rounded-full border border-slate-200/80 shrink-0 whitespace-nowrap">
+          <nav className="pb-nav hidden lg:flex items-center gap-1 bg-slate-50/90 p-1 rounded-full border border-slate-200/80 shrink-0 whitespace-nowrap">
             {[
               ['Features', '#features', 'bolt'],
               ['How It Works', '#how-it-works', 'account_tree'],
@@ -334,7 +334,7 @@ export default function LandingPage() {
               <a
                 key={label}
                 href={href}
-                className="flex flex-nowrap items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13.5px] font-bold text-[#334155] hover:text-[#0a2540] hover:bg-white hover:shadow-xs transition-all duration-200 no-underline whitespace-nowrap shrink-0"
+                className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-[13.5px] font-bold text-[#334155] hover:text-[#0a2540] hover:bg-white hover:shadow-xs transition-all duration-200 no-underline whitespace-nowrap shrink-0"
               >
                 <span className="material-symbols-outlined text-[16px] text-teal-600 font-bold">{icon}</span>
                 <span>{label}</span>
@@ -343,7 +343,7 @@ export default function LandingPage() {
           </nav>
 
           {/* Right Controls */}
-          <div className="flex flex-nowrap items-center gap-1.5 sm:gap-2.5 shrink-0 whitespace-nowrap">
+          <div className="flex items-center gap-2 sm:gap-2.5 shrink-0">
             <Show when="signed-out">
               <SignInButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
@@ -356,7 +356,7 @@ export default function LandingPage() {
               <SignUpButton mode="modal" fallbackRedirectUrl="/home" forceRedirectUrl="/home">
                 <button
                   type="button"
-                  className="pb-cta inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer whitespace-nowrap shrink-0"
+                  className="pb-cta hidden min-[421px]:inline-flex items-center gap-1.5 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-[13px] font-black uppercase tracking-wider text-white no-underline shadow-[0_4px_16px_rgba(10,37,64,0.25)] hover:shadow-[0_6px_24px_rgba(13,148,136,0.35)] group transition-all cursor-pointer whitespace-nowrap shrink-0"
                   style={{
                     background: 'linear-gradient(135deg, #0a2540 0%, #0f3d6b 60%, #0d9488 100%)',
                   }}
@@ -372,7 +372,7 @@ export default function LandingPage() {
             <Show when="signed-in">
               <Link
                 href="/home"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-extrabold text-[#007168] bg-[#57fae9]/40 hover:bg-[#57fae9] transition-all no-underline shadow-2xs whitespace-nowrap shrink-0"
+                className="hidden min-[421px]:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-[13px] font-extrabold text-[#007168] bg-[#57fae9]/40 hover:bg-[#57fae9] transition-all no-underline shadow-2xs whitespace-nowrap shrink-0"
               >
                 <span className="material-symbols-outlined text-base">dashboard</span>
                 <span>Dashboard</span>
@@ -383,7 +383,7 @@ export default function LandingPage() {
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               aria-label="Toggle navigation menu"
-              className="flex lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 items-center justify-center text-[#0a2540] cursor-pointer transition-colors shrink-0"
+              className="flex lg:hidden w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-slate-100 hover:bg-slate-200 active:scale-95 border border-slate-200 items-center justify-center text-[#0a2540] cursor-pointer transition-all shrink-0"
             >
               <span className="material-symbols-outlined text-[18px] sm:text-[20px]">{mobileOpen ? 'close' : 'menu'}</span>
             </button>

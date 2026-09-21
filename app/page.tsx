@@ -845,7 +845,7 @@ export default function LandingPage() {
               <span className="pb-glow w-2 h-2 rounded-full bg-teal-500 inline-block" />
               <span className="font-mono text-[11px] sm:text-xs text-[#4a5568]">POCKET-NET V4.89 ACTIVE</span>
             </div>
-            <p className="text-[11px] sm:text-xs text-[#74777e]">© 2025 PocketBank Technologies AG. Sovereign institutional banking infrastructure. All rights reserved.</p>
+            <p className="text-[11px] sm:text-xs text-[#74777e]">© 2026 PocketBank Technologies AG. Sovereign institutional banking infrastructure. All rights reserved.</p>
           </div>
         </div>
       </footer>

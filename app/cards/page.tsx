@@ -13,11 +13,12 @@ export default function CardsPage() {
   const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   const currentCard = cards.find((c) => c.id === selectedCardId) || cards[0];
+  const [prevCardId, setPrevCardId] = useState(cards[0].id);
 
-  // Sync slider value when card changes
-  useEffect(() => {
+  if (prevCardId !== selectedCardId) {
+    setPrevCardId(selectedCardId);
     setSliderValue(currentCard.dailyLimit);
-  }, [selectedCardId, currentCard.dailyLimit]);
+  }
 
   // Handle debounced slider change
   const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {

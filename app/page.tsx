@@ -6,6 +6,8 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { SignInButton, SignUpButton, Show, UserButton, useAuth } from '@clerk/nextjs';
 import { ScrollReveal, StaggerContainer, StaggerItem } from '@/components/ui/ScrollReveal';
+import { TextReveal } from '@/components/ui/TextReveal';
+import { BoxReveal } from '@/components/ui/BoxReveal';
 
 /* ─── Coverflow Carousel ─── */
 const coverCards = [
@@ -134,7 +136,7 @@ const coverCards = [
           </div>
           <div className="p-3 rounded-xl bg-[#f1f4f7] border border-slate-100 opacity-80">
             <div className="flex items-center justify-between mb-1">
-              <span className="text-xs font-bold text-[#0a2540]">Read 'Psychology of Money'</span>
+              <span className="text-xs font-bold text-[#0a2540]">Read &apos;Psychology of Money&apos;</span>
               <span className="font-mono text-xs text-sky-700 font-bold">+₹300</span>
             </div>
             <p className="text-[11px] text-[#4a5568]">Assigned by Guardian • 2 days left</p>
@@ -180,6 +182,8 @@ const coverCards = [
 function CoverflowCarousel() {
   const [current, setCurrent] = useState(0);
   const [isAuto, setIsAuto] = useState(true);
+  const [inView, setInView] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const touchStartRef = useRef<number | null>(null);
   const total = coverCards.length;
@@ -187,9 +191,30 @@ function CoverflowCarousel() {
   const prev = useCallback(() => setCurrent((c) => (c - 1 + total) % total), [total]);
 
   useEffect(() => {
-    if (isAuto) { intervalRef.current = setInterval(next, 3500); }
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
-  }, [isAuto, next]);
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setInView(entry.isIntersecting);
+        });
+      },
+      { threshold: 0.2 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (isAuto && inView && !prefersReducedMotion) {
+      intervalRef.current = setInterval(next, 3500);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [isAuto, inView, next]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartRef.current = e.touches[0].clientX;
@@ -218,6 +243,7 @@ function CoverflowCarousel() {
 
   return (
     <div
+      ref={containerRef}
       className="w-full mt-10 sm:mt-16 md:mt-24 relative select-none overflow-hidden sm:overflow-visible pb-4"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
@@ -244,7 +270,7 @@ function CoverflowCarousel() {
       <div className="relative w-full h-[420px] sm:h-[450px] md:h-[500px] flex items-center justify-center overflow-visible" style={{ perspective: '1000px' }}>
         {coverCards.map((card, idx) => (
           <div key={idx} onClick={() => setCurrent(idx)}
-            style={{ ...getStyle(idx), transformStyle: 'preserve-3d', transition: 'all 0.45s ease', cursor: 'pointer' }}
+            style={{ ...getStyle(idx), transformStyle: 'preserve-3d', transition: 'transform 0.45s ease, opacity 0.45s ease', willChange: 'transform, opacity', cursor: 'pointer' }}
             className="absolute w-[285px] sm:w-[340px] md:w-[380px] h-[385px] sm:h-[400px] md:h-[430px] rounded-2xl bg-white border border-slate-200 p-4 sm:p-6 flex flex-col shadow-[0_12px_35px_rgba(10,37,64,0.08)]">
             <div className="flex items-center justify-between mb-3 sm:mb-4">
               <span className="text-[10px] sm:text-[11px] font-semibold text-[#4a5568] uppercase tracking-widest">{card.label}</span>
@@ -289,9 +315,8 @@ export default function LandingPage() {
   }, [isLoaded, isSignedIn, router]);
 
   return (
-    <div className="bg-[#f7fafd] text-[#0a2540] min-h-screen" style={{ fontFamily: "'Inter', sans-serif", overflowX: 'hidden' }}>
+    <div className="bg-[#f7fafd] text-[#0a2540] min-h-screen" style={{ fontFamily: "var(--font-inter-nf), Inter, system-ui, sans-serif", overflowX: 'hidden' }}>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap');
         html { scroll-behavior: smooth; }
         .pb-glow { animation: pb-ping 2s ease-in-out infinite; }
         @keyframes pb-ping { 0%,100%{opacity:1;}50%{opacity:0.4;} }
@@ -305,7 +330,7 @@ export default function LandingPage() {
 
       {/* HEADER */}
       <header className="absolute top-[22px] sm:top-[24px] left-0 right-0 z-50 px-3.5 sm:px-6 md:px-8 max-w-[1240px] mx-auto transition-all duration-300">
-        <div className="bg-white/95 backdrop-blur-xl border border-slate-200/90 shadow-[0_8px_30px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-full px-4 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4">
+        <div className="bg-white border border-slate-200/90 shadow-[0_8px_30px_-5px_rgba(10,37,64,0.08),0_2px_8px_rgba(10,37,64,0.03)] rounded-full px-4 sm:px-5 py-2 sm:py-2.5 flex items-center justify-between gap-2 sm:gap-4">
 
           {/* Brand */}
           <a href="#" className="flex items-center gap-2 sm:gap-2.5 no-underline group shrink-0">
@@ -392,7 +417,7 @@ export default function LandingPage() {
 
         {/* Mobile menu dropdown */}
         {mobileOpen && (
-          <div className="lg:hidden mt-2 p-4 bg-white/95 backdrop-blur-xl rounded-2xl border border-slate-200 shadow-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="lg:hidden mt-2 p-4 bg-white rounded-2xl border border-slate-200 shadow-xl flex flex-col gap-2 animate-in fade-in slide-in-from-top-2 duration-200">
             {[
               ['Features', '#features', 'bolt'],
               ['How It Works', '#how-it-works', 'account_tree'],
@@ -541,7 +566,7 @@ export default function LandingPage() {
                 <span className="material-symbols-outlined text-[#0d9488] icon-sm">tune</span>
                 <span className="text-xs font-semibold uppercase text-[#0d9488]">Next-Gen Architecture</span>
               </div>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] tracking-tight">High-Precision Banking for High-Growth Minds.</h2>
+              <TextReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] tracking-tight">High-Precision Banking for High-Growth Minds.</TextReveal>
               <p className="text-sm sm:text-base text-[#4a5568] mt-2">Engineered without legacy bank bloatware. Clean ergonomics, programmable goal vaults, and uncompromised transparency.</p>
             </ScrollReveal>
 
@@ -642,7 +667,7 @@ export default function LandingPage() {
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
             <ScrollReveal direction="up" distance={30} duration={0.5} className="text-center max-w-2xl mx-auto mb-12 sm:mb-20">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Effortless Onboarding</span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Up and Running in Under 180 Seconds.</h2>
+              <TextReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Up and Running in Under 180 Seconds.</TextReveal>
               <p className="text-sm sm:text-base text-[#4a5568] mt-2 leading-relaxed">No physical paper stacks. No branch queues. Seamless dual-app sync for student and parent.</p>
             </ScrollReveal>
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
@@ -685,14 +710,14 @@ export default function LandingPage() {
 
             <ScrollReveal direction="up" distance={30} duration={0.5} className="text-center max-w-2xl mx-auto mb-10 sm:mb-16">
               <span className="text-xs font-semibold uppercase text-[#0d9488] tracking-wider bg-teal-50 border border-teal-100 px-3 py-1 rounded-full">Verified Perspectives</span>
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Trusted by Students. Relied Upon by Guardians.</h2>
+              <TextReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] mt-3">Trusted by Students. Relied Upon by Guardians.</TextReveal>
             </ScrollReveal>
 
             <StaggerContainer className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {[
-                { quote: '"PocketBank saved me from constantly asking my dad for money transfers during exam semester. The auto round-up helped me buy my mechanical keyboard in 3 months!"', name: 'Aditya Roy', role: 'Computer Science, BITS Pilani', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDC7mv6hcD5WCSeZiL13Ba9BpEVr9i0B21LxwLuuq1Cj4aJJptlTXam3pS_eexjrEUD9M_SK8xLP8ZZ7AKrQXOswXPggRqBb0cJHXZUYKf0A0N9G6qIPYaOGEtwIoQzjdThyQ45xvP9Tj2cYiES1DT-2FFw9qDVSY6p--jqhE846m6K0B5Wl4Tb8WGqbolEe3ktNFcNiX8Y7ZC4VHq-TYm23jwamFAflaFHvqLMTmyb1QEX3cDrd8gW0g' },
-                { quote: '"As a parent, handing a debit card to a 17-year-old was terrifying until PocketBank. I set a ₹500 daily food cap and can turn off online shopping whenever needed."', name: 'Meenakshi Sundaram', role: 'Mother of 1st-year Delhi Univ Student', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCRSywwbFkg8XtaafwVD27ukBub63WgSdMEfPXp_QkPlNmF4Ysihyg-nzLUJZcd7JuVkJNmrVy8ckm0Uxll3bqcYeIb7LWecufbXiCad_zH6Em7Z_s35NxEgqVN95b8eVoc5TvDv9NJX0NKCWkc9J4Lv86fuvmnzUX9ZcpsbUgQ4xEypung3Smma4ixcOU6ZFbKUbkaeL5tdmqpRIdj3hvwY9BVQ2PSk0oyUUG27EmRpDu5jV2AG6MEaA' },
-                { quote: '"The app feels like something Apple would build if they did student banking. The UPI tap speed is crazy fast, and the physical card finish looks super clean."', name: 'Tanvi Deshmukh', role: 'Design Major, NID Ahmedabad', avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA7PKmoMybSgfjIBrEt4DpCE4V3A7RK3-zTPHYlwej30dGK50xe0lTaPPkrK-Rzx3XUFfvnKWuT68pSdUnHfOSgcgt2xa94HqIygfjcill7nRpI0gca6Aacnu_-suxK_0HxVMu_2HZ3b8NO1xRXn_2sGdRFo4nG1fcFp9fkgDMdEboehbFXZLsNHIY6fcNtpUVrt7qw-CZNBcHF81-kAkY3rpoEmF1r61bJ4Rjv7lAmhk2f5BJlxI4MiQ' },
+                { quote: '"PocketBank saved me from constantly asking my dad for money transfers during exam semester. The auto round-up helped me buy my mechanical keyboard in 3 months!"', name: 'Aditya Roy', role: 'Computer Science, BITS Pilani', avatar: '/avatar-aditya.webp' },
+                { quote: '"As a parent, handing a debit card to a 17-year-old was terrifying until PocketBank. I set a ₹500 daily food cap and can turn off online shopping whenever needed."', name: 'Meenakshi Sundaram', role: 'Mother of 1st-year Delhi Univ Student', avatar: '/avatar-meenakshi.webp' },
+                { quote: '"The app feels like something Apple would build if they did student banking. The UPI tap speed is crazy fast, and the physical card finish looks super clean."', name: 'Tanvi Deshmukh', role: 'Design Major, NID Ahmedabad', avatar: '/avatar-tanvi.webp' },
               ].map((t, i) => (
                 <StaggerItem key={i} className="rounded-2xl bg-white border border-slate-200 p-6 sm:p-8 md:p-10 flex flex-col justify-between shadow-[0_4px_20px_rgba(10,37,64,0.05)]">
                   <div>
@@ -717,7 +742,7 @@ export default function LandingPage() {
         {/* SECURITY */}
         <section id="security" className="w-full py-12 sm:py-16 md:py-24">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <ScrollReveal direction="up" distance={40} duration={0.6}>
+            <BoxReveal boxColor="#0d9488" duration={0.65} className="rounded-3xl">
               <div className="rounded-3xl bg-white border border-slate-200 p-6 sm:p-10 md:p-14 relative overflow-hidden shadow-[0_10px_35px_rgba(10,37,64,0.06)]">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
                   <div>
@@ -725,7 +750,7 @@ export default function LandingPage() {
                       <span className="material-symbols-outlined text-teal-700 icon-sm">verified_user</span>
                       <span className="text-xs font-semibold uppercase text-teal-700">Dual-Vault Security Engine</span>
                     </div>
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</h2>
+                    <TextReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#0a2540] leading-tight">Uncompromised Safety. Zero Compromise on Independence.</TextReveal>
                     <p className="text-sm text-[#4a5568] mt-3 sm:mt-4 leading-relaxed">PocketBank operates with zero overdraft risk. Accounts cannot go into negative balance. Automated merchant code restriction blocks high-risk platforms while preserving student autonomy for everyday purchases.</p>
                     <div className="mt-5 sm:mt-6 space-y-3">
                       {[
@@ -754,14 +779,14 @@ export default function LandingPage() {
                   </div>
                 </div>
               </div>
-            </ScrollReveal>
+            </BoxReveal>
           </div>
         </section>
 
         {/* CTA */}
         <section id="open-account" className="w-full py-14 sm:py-20 md:py-28">
           <div className="max-w-[1280px] mx-auto px-4 sm:px-6 md:px-12">
-            <ScrollReveal direction="up" distance={40} duration={0.6}>
+            <BoxReveal boxColor="#0a2540" duration={0.65} className="rounded-3xl">
               <div className="rounded-3xl p-6 sm:p-12 md:p-20 text-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #0a2540 0%, #0f3b66 50%, #0d9488 100%)', boxShadow: '0 20px 60px rgba(10,37,64,0.25)' }}>
                 <div className="pointer-events-none absolute -top-32 left-1/2 -translate-x-1/2 w-96 h-96 rounded-full" style={{ background: 'rgba(13,148,136,0.2)', filter: 'blur(80px)' }} />
                 <div className="max-w-2xl mx-auto relative z-10">
@@ -769,7 +794,7 @@ export default function LandingPage() {
                     <span className="material-symbols-outlined icon-sm text-teal-300">bolt</span>
                     <span className="text-[11px] font-semibold text-teal-200 uppercase tracking-wider">Instant Digital Issuance</span>
                   </div>
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</h2>
+                  <TextReveal as="h2" className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-white leading-tight">Open a PocketBank Student Account Today.</TextReveal>
                   <p className="text-sm sm:text-base text-white/70 mt-3 mb-8 sm:mb-10 leading-relaxed">Step into the next chapter of smart campus money. Free account opening with zero balance requirement and custom holographic debit card.</p>
                   <div className="flex flex-col sm:flex-row items-center gap-3 max-w-md mx-auto">
                     <div className="relative w-full">
@@ -801,7 +826,7 @@ export default function LandingPage() {
                   <p className="text-[10px] sm:text-[11px] text-white/50 mt-4">By entering your number, you agree to receive SMS verification. Partnered with RBI-regulated banking institution.</p>
                 </div>
               </div>
-            </ScrollReveal>
+            </BoxReveal>
           </div>
         </section>
       </main>

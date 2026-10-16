@@ -1,13 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import Link from 'next/link';
 import { UserButton, Show, useClerk } from '@clerk/nextjs';
 
 export const Header: React.FC = () => {
-  const router = useRouter();
   const { signOut } = useClerk();
   const { userProfile, isParentView, addToast, logout } = useBank();
   const [showNotifications, setShowNotifications] = useState(false);

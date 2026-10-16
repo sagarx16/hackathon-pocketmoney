@@ -4,7 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-export const BottomNav: React.FC<{ onOpenMenu?: () => void }> = ({ onOpenMenu }) => {
+export const BottomNav: React.FC = () => {
   const pathname = usePathname();
 
   const navItems = [

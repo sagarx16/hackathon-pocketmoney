@@ -1,7 +1,6 @@
 'use client';
 
-import React from 'react';
-import { motion, useReducedMotion, type Variants } from 'framer-motion';
+import React, { useEffect, useRef, useState } from 'react';
 
 export interface ScrollRevealProps {
   children: React.ReactNode;
@@ -24,44 +23,81 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   viewportMargin = '-100px',
   once = true,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
+  const [hidden, setHidden] = useState(false);
+  const [revealed, setRevealed] = useState(false);
 
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const rect = el.getBoundingClientRect();
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    // Only hide elements that are currently below the viewport
+    if (rect.top >= windowHeight) {
+      setHidden(true);
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setRevealed(true);
+              if (once) {
+                observer.unobserve(entry.target);
+              }
+            } else if (!once) {
+              setRevealed(false);
+            }
+          });
+        },
+        { rootMargin: viewportMargin }
+      );
+
+      observer.observe(el);
+      return () => observer.disconnect();
+    }
+  }, [once, viewportMargin]);
 
   const getOffset = () => {
     switch (direction) {
       case 'up':
-        return { y: distance, x: 0 };
+        return `translate3d(0, ${distance}px, 0)`;
       case 'down':
-        return { y: -distance, x: 0 };
+        return `translate3d(0, -${distance}px, 0)`;
       case 'left':
-        return { x: distance, y: 0 };
+        return `translate3d(${distance}px, 0, 0)`;
       case 'right':
-        return { x: -distance, y: 0 };
+        return `translate3d(-${distance}px, 0, 0)`;
       case 'none':
       default:
-        return { x: 0, y: 0 };
+        return 'translate3d(0, 0, 0)';
     }
   };
 
-  const offset = getOffset();
+  const isAnimated = hidden;
+  const isVisible = !hidden || revealed;
+
+  const style: React.CSSProperties | undefined = isAnimated
+    ? {
+        opacity: isVisible ? 1 : 0,
+        transform: isVisible ? 'translate3d(0, 0, 0)' : getOffset(),
+        transitionProperty: 'opacity, transform',
+        transitionDuration: `${duration}s`,
+        transitionTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)',
+        transitionDelay: `${delay}s`,
+        willChange: isVisible ? 'auto' : 'opacity, transform',
+      }
+    : undefined;
 
   return (
-    <motion.div
-      initial={{ opacity: 0, x: offset.x, y: offset.y }}
-      whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once, margin: viewportMargin as any }}
-      transition={{
-        duration,
-        delay,
-        ease: 'easeOut',
-      }}
-      className={className}
-    >
+    <div ref={ref} className={className} style={style}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -82,32 +118,80 @@ export const StaggerContainer: React.FC<StaggerContainerProps> = ({
   viewportMargin = '-80px',
   once = true,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
+  const ref = useRef<HTMLDivElement>(null);
 
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
+  useEffect(() => {
+    const container = ref.current;
+    if (!container) return;
 
-  const containerVariants: Variants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: staggerDelay,
-        delayChildren,
-      },
-    },
-  };
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+
+    const rect = container.getBoundingClientRect();
+    const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+
+    // Only hide if the container is currently below the viewport
+    if (rect.top >= windowHeight) {
+      const items = Array.from(container.children).filter(
+        (child): child is HTMLElement => child.getAttribute('data-stagger-item') === 'true'
+      );
+
+      // Initially hide items and set up transition delays
+      items.forEach((item, index) => {
+        const dist = parseFloat(item.getAttribute('data-distance') || '30');
+        const dur = parseFloat(item.getAttribute('data-duration') || '0.5');
+        const totalDelay = delayChildren + index * staggerDelay;
+
+        item.style.opacity = '0';
+        item.style.transform = `translate3d(0, ${dist}px, 0)`;
+        item.style.transitionProperty = 'opacity, transform';
+        item.style.transitionDuration = `${dur}s`;
+        item.style.transitionTimingFunction = 'cubic-bezier(0, 0, 0.2, 1)';
+        item.style.transitionDelay = `${totalDelay}s`;
+        item.style.willChange = 'opacity, transform';
+      });
+
+      const revealItems = () => {
+        items.forEach((item) => {
+          item.style.opacity = '1';
+          item.style.transform = 'translate3d(0, 0, 0)';
+        });
+      };
+
+      const hideItems = () => {
+        items.forEach((item) => {
+          const dist = parseFloat(item.getAttribute('data-distance') || '30');
+          item.style.opacity = '0';
+          item.style.transform = `translate3d(0, ${dist}px, 0)`;
+        });
+      };
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              revealItems();
+              if (once) {
+                observer.unobserve(entry.target);
+              }
+            } else if (!once) {
+              hideItems();
+            }
+          });
+        },
+        { rootMargin: viewportMargin }
+      );
+
+      observer.observe(container);
+      return () => observer.disconnect();
+    }
+  }, [staggerDelay, delayChildren, viewportMargin, once]);
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once, margin: viewportMargin as any }}
-      className={className}
-    >
+    <div ref={ref} className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 };
 
@@ -124,27 +208,14 @@ export const StaggerItem: React.FC<StaggerItemProps> = ({
   distance = 30,
   duration = 0.5,
 }) => {
-  const shouldReduceMotion = useReducedMotion();
-
-  if (shouldReduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
-  const itemVariants: Variants = {
-    hidden: { opacity: 0, y: distance },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration,
-        ease: 'easeOut',
-      },
-    },
-  };
-
   return (
-    <motion.div variants={itemVariants} className={className}>
+    <div
+      data-stagger-item="true"
+      data-distance={distance}
+      data-duration={duration}
+      className={className}
+    >
       {children}
-    </motion.div>
+    </div>
   );
 };

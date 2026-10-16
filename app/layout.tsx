@@ -4,17 +4,19 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { BankProvider } from '@/context/BankContext';
 import { MainLayout } from '@/components/layout/MainLayout';
+import { SmoothScroll } from '@/components/ui/SmoothScroll';
 
 const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-inter',
+  variable: '--font-inter-nf',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ['latin'],
   display: 'swap',
-  variable: '--font-mono',
+  variable: '--font-mono-nf',
+  preload: false,
 });
 
 export const viewport: Viewport = {
@@ -73,31 +75,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-icon.png" />
-        {/* Material Symbols — preconnect & preload hints with display=swap */}
+        {/* Material Symbols — preconnect & single stylesheet with display=block */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link
-          rel="preload"
-          as="style"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
-        />
-        <link
           rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=block"
         />
       </head>
       <body className="bg-[#f7fafd] text-[#181c1e] antialiased selection:bg-[#57fae9] selection:text-[#007168]">
-        <ClerkProvider
-          appearance={{
-            options: {
-              unsafe_disableDevelopmentModeWarnings: true,
-            },
-          }}
-        >
-          <BankProvider>
-          <MainLayout>{children}</MainLayout>
-          </BankProvider>
-        </ClerkProvider>
+        <SmoothScroll>
+          <ClerkProvider
+            appearance={{
+              options: {
+                unsafe_disableDevelopmentModeWarnings: true,
+              },
+            }}
+          >
+            <BankProvider>
+              <MainLayout>{children}</MainLayout>
+            </BankProvider>
+          </ClerkProvider>
+        </SmoothScroll>
       </body>
     </html>
   );

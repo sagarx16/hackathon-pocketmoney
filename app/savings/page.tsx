@@ -4,12 +4,12 @@ import React, { useState } from 'react';
 import { useBank } from '@/context/BankContext';
 
 export default function SavingsPage() {
-  const { savingsGoals, depositToGoal, createGoal, addToast } = useBank();
+  const { savingsGoals, depositToGoal, createGoal } = useBank();
   const [showGoalModal, setShowGoalModal] = useState(false);
   const [newTitle, setNewTitle] = useState('');
   const [newTarget, setNewTarget] = useState('');
   const [newDate, setNewDate] = useState('');
-  const [newIcon, setNewIcon] = useState('laptop_mac');
+  const newIcon = 'laptop_mac';
 
   const [depositGoalId, setDepositGoalId] = useState<string | null>(null);
   const [depositAmount, setDepositAmount] = useState('');

@@ -3,13 +3,12 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { useBank } from '@/context/BankContext';
 import { UserButton, Show, useClerk } from '@clerk/nextjs';
 
 export const Sidebar: React.FC = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const { isParentView, toggleParentView, userProfile, logout } = useBank();
   const [mobileOpen, setMobileOpen] = useState(false);
 
